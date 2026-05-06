@@ -105,5 +105,8 @@ function renderNotices() {
     }).join('');
 }
 
-// 執行初始化
-initApp();
+window.addEventListener('DOMContentLoaded', () => {
+    initApp().catch(err => {
+        console.error("系統初始化失敗，可能是 API 網址解碼錯誤或連線問題:", err);
+    });
+});
