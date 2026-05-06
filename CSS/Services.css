@@ -46,29 +46,30 @@ nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font
 /* 顯示全部按鈕 */
 .more-link { font-size: 0.85rem; color: var(--accent-color); text-decoration: none; font-weight: bold; }
 .more-link:hover { text-decoration: underline; }
-/* 讓內容往上提 */
+/* 讓內容整體往上提 */
 .container { 
     max-width: 900px; 
     margin: auto; 
-    padding: 0 20px 40px 20px; 
+    padding: 0 20px 40px 20px !important; 
 }
 
-/* 緊湊型個人簡介 */
+/* 個人簡介區塊：壓縮內外距 */
 .intro-section { 
     text-align: center; 
-    margin: 0 auto 30px auto; 
-    padding: 15px 0; /* 控制文字與線條的距離 */
+    margin: 0 auto 30px auto !important; 
+    padding: 10px 0 !important; /* 縮減上下內距 */
     border-bottom: 1px double #eee;
 }
 
 .intro-text { 
     font-size: 1.1rem; 
-    line-height: 1.5; /* 稍微縮小行間距 */
+    line-height: 1.6; 
     letter-spacing: 1px; 
     color: #444; 
     font-style: italic; 
+    /* 核心：保留換行，但處理掉 HTML 縮排產生的空格 */
     white-space: pre-line; 
-    margin: 0;
+    margin: 0 !important;
 }
 /* 服務項目卡片 */
 .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
