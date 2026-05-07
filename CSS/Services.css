@@ -69,6 +69,17 @@ nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font
         border-radius: 0;    /* 手機版去掉圓角，看起來更俐落 */
         box-shadow: none;    /* 手機版去掉陰影，節省效能且視覺更乾淨 */
     }
+	.intro-text {
+        white-space: normal; /* 💡 手機版放棄手動換行，讓瀏覽器根據寬度自動排版 */
+        font-size: 1rem;     /* 💡 稍微縮小字體，避免一行只剩三五個字 */
+        text-align: justify; /* 💡 讓兩端對齊，視覺上更整齊 */
+        padding: 0 10px;    /* 給文字一點呼吸空間 */
+    }
+    
+    /* 調整公告標題，防止過長 */
+    .notice-item {
+        word-break: break-all; 
+    }
 }
 
 /* 個人簡介區塊：壓縮內外距 */
@@ -88,6 +99,8 @@ nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font
     /* 核心：保留換行，但處理掉 HTML 縮排產生的空格 */
     white-space: pre-line; 
     margin: 0 !important;
+	word-break: keep-all;
+    overflow-wrap: break-word;
 }
 /* 服務項目卡片 */
 .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
