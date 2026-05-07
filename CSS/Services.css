@@ -62,26 +62,6 @@ nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font
     border-radius: 12px;
     box-sizing: border-box;  /* 確保 padding 不會撐破寬度 */
 }
-@media (max-width: 600px) {
-    .container {
-        width: 100%;         /* 手機版可以考慮佔滿 100%，或維持 95% 看你喜好 */
-        margin: 0 auto;      /* 手機版頂部不需要空隙 */
-        border-radius: 0;    /* 手機版去掉圓角，看起來更俐落 */
-        box-shadow: none;    /* 手機版去掉陰影，節省效能且視覺更乾淨 */
-    }
-	.intro-text {
-        white-space: normal; /* 💡 手機版放棄手動換行，讓瀏覽器根據寬度自動排版 */
-        font-size: 1rem;     /* 💡 稍微縮小字體，避免一行只剩三五個字 */
-        text-align: justify; /* 💡 讓兩端對齊，視覺上更整齊 */
-        padding: 0 10px;    /* 給文字一點呼吸空間 */
-    }
-    
-    /* 調整公告標題，防止過長 */
-    .notice-item {
-        word-break: break-all; 
-    }
-}
-
 /* 個人簡介區塊：壓縮內外距 */
 .intro-section { 
     text-align: center; 
@@ -129,4 +109,34 @@ footer {
 
 footer p {
     margin: 0; /* 消除段落預設的外距 */
+}
+@media (max-width: 600px) {
+	header {
+        padding: 1rem 3%; /* 縮小左右內距 */
+        flex-direction: column; /* 💡 讓 Logo 和 導覽連結分兩行展示，或是縮小字體 */
+        gap: 10px;
+    }
+    nav a {
+        margin-left: 10px; /* 縮小連結間距 */
+        font-size: 0.8rem;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+    .container {
+        width: 100%;         /* 手機版可以考慮佔滿 100%，或維持 95% 看你喜好 */
+        margin: 0 auto;      /* 手機版頂部不需要空隙 */
+        border-radius: 0;    /* 手機版去掉圓角，看起來更俐落 */
+        box-shadow: none;    /* 手機版去掉陰影，節省效能且視覺更乾淨 */
+    }
+	.intro-text {
+        white-space: normal; /* 💡 手機版放棄手動換行，讓瀏覽器根據寬度自動排版 */
+        font-size: 1rem;     /* 💡 稍微縮小字體，避免一行只剩三五個字 */
+        text-align: justify; /* 💡 讓兩端對齊，視覺上更整齊 */
+        padding: 0 10px;    /* 給文字一點呼吸空間 */
+    }
+    /* 調整公告標題，防止過長 */
+    .notice-item {
+        word-break: break-all; 
+    }
 }
