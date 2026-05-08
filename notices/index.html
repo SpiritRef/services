@@ -31,7 +31,6 @@
 		.page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 		.back-home { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
 
-		/* 跳頁選單樣式 */
 		.jump-select { padding: 4px; border-radius: 4px; border: 1px solid #ccc; background: #fff; }
 
 		@media (max-width: 600px) {
@@ -65,7 +64,6 @@
 	<div class="pagination">
 		<button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
 		
-		<!-- 💡 新增：跳頁選單 -->
 		<span>跳至第 
 			<select id="pageJump" class="jump-select" onchange="jumpToPage()">
 				<option value="1">1</option>
@@ -81,12 +79,14 @@
 	import { getIni } from '../Javascript/API.js';
 
 	let API_BASE = "";
+	let JSON_PATH = ""; // 💡 儲存 INI 裡的靜態 JSON 路徑
 	let allNotices = [];
 	let currentPage = 1;
 	let pageSize = 10;
 	const iniPath = '../settings/Services.ini';
 
 	async function init() {
+		// 1. 優先讀取快取
 		const cache = localStorage.getItem('cache_notices');
 		if (cache) {
 			allNotices = JSON.parse(cache);
@@ -95,12 +95,50 @@
 
 		try {
 			const config = await getIni(iniPath);
-			if (config && config.NOVEL_API_URL) {
-				API_BASE = config.NOVEL_API_URL.startsWith("http") ? config.NOVEL_API_URL : atob(config.NOVEL_API_URL);
-				await fetchRemoteData(cache);
+			if (config) {
+				// 💡 讀取 JSON 備份路徑 (例如: ../Data/Notices.json)
+				JSON_PATH = config.JsonNotice || config.JsonData; 
+				
+				// 💡 如果快取沒資料，立刻先抓靜態 JSON
+				if (allNotices.length === 0 && JSON_PATH) {
+					await fetchStaticJson();
+				}
+
+				// 2. 解析 API 網址並啟動背景同步
+				if (config.NOVEL_API_URL) {
+					API_BASE = config.NOVEL_API_URL.startsWith("http") ? config.NOVEL_API_URL : atob(config.NOVEL_API_URL);
+					fetchRemoteData(cache); 
+				}
 			}
 		} catch (e) {
 			console.error("初始化失敗", e);
+		}
+	}
+
+	/**
+	 * 💡 核心邏輯：抓取靜態 JSON 備份
+	 */
+	async function fetchStaticJson() {
+		try {
+			// 處理多一層 ghoststory 的路徑問題
+			let finalPath = JSON_PATH;
+			if (window.location.pathname.includes('/article/') || window.location.pathname.includes('/ghoststory/')) {
+				finalPath = JSON_PATH.startsWith('../') ? JSON_PATH : '../' + JSON_PATH;
+			}
+
+			const res = await fetch(finalPath);
+			if (res.ok) {
+				const data = await res.json();
+				// 過濾與排序
+				const filtered = data.filter(i => String(i["標題"] || "").includes("公告"))
+									 .sort((a,b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
+				
+				allNotices = filtered;
+				console.log("📄 已載入靜態 JSON 公告備份");
+				updateUI();
+			}
+		} catch (e) {
+			console.warn("無法讀取靜態 JSON:", e);
 		}
 	}
 
@@ -118,16 +156,15 @@
 					localStorage.setItem('cache_notices', JSON.stringify(filtered));
 				}, 100);
 			}
-		} catch(e) { console.error(e); }
+		} catch(e) { console.error("API 同步失敗", e); }
 	}
 
 	function updateUI() {
 		document.getElementById('totalCount').innerText = `共 ${allNotices.length} 筆`;
-		updateJumpSelect(); // 💡 每次更新資料都要重新計算總頁數
+		updateJumpSelect();
 		render();
 	}
 
-	// 💡 核心邏輯：動態生成跳頁選項
 	function updateJumpSelect() {
 		const select = document.getElementById('pageJump');
 		const maxPage = Math.ceil(allNotices.length / pageSize) || 1;
@@ -159,15 +196,13 @@
 		document.getElementById('prevBtn').disabled = currentPage === 1;
 		document.getElementById('nextBtn').disabled = end >= allNotices.length;
 		
-		// 確保下拉選單同步目前的頁碼
 		document.getElementById('pageJump').value = currentPage;
 	}
 
-	// 暴露函式至全域
 	window.changePageSize = () => {
 		pageSize = parseInt(document.getElementById('pageSize').value);
 		currentPage = 1;
-		updateJumpSelect(); // 每頁筆數變動，總頁數也會變
+		updateJumpSelect();
 		render();
 	};
 
