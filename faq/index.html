@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常見問題與回饋 | 鬼磕頭</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; color: #333; line-height: 1.6; }
+        .list-container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { border-bottom: 2px solid #2980b9; padding-bottom: 10px; font-size: 1.5rem; color: #333; }
+        
+        .back-home { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
+        
+        /* 問題項目樣式 */
+        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .faq-item:last-child { border-bottom: none; }
+        
+        .faq-question { 
+            font-weight: bold; 
+            color: #2980b9; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        .faq-question::after { content: '▼'; font-size: 0.8rem; color: #ccc; transition: 0.3s; }
+        .faq-item.active .faq-question::after { transform: rotate(180deg); }
+
+        .faq-answer { 
+            margin-top: 10px; 
+            color: #555; 
+            display: none; 
+            white-space: pre-line; 
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+        .faq-item.active .faq-answer { display: block; }
+
+        .loading-text { text-align: center; color: #999; padding: 40px; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .list-container { padding: 15px; }
+            h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="list-container">
+    <a href="../index.html" class="back-home">⬅ 返回首頁</a>
+    <h1>常見問題與回饋</h1>
+
+    <div id="faq-content">
+        <div class="loading-text">正在感應靈界解答...</div>
+    </div>
+</div>
+
+<script type="module">
+    import { getIni } from '../Javascript/API.js';
+
+    let API_BASE = "";
+    let JSON_PATH = "";
+    let allFAQ = [];
+    const iniPath = '../settings/Services.ini';
+
+    async function init() {
+        // 1. 優先嘗試快取
+        const cache = localStorage.getItem('cache_faq');
+        if (cache) {
+            allFAQ = JSON.parse(cache);
+            render();
+        }
+
+        try {
+            const config = await getIni(iniPath);
+            if (config) {
+                JSON_PATH = config.JsonFAQ;
+                
+                // 2. 如果快取沒資料，抓取靜態 JSON
+                if (allFAQ.length === 0 && JSON_PATH) {
+                    await fetchStaticJson();
+                }
+
+                // 3. 背景與 Apps Script 同步 (假設 type=faq)
+                if (config.NOVEL_API_URL) {
+                    API_BASE = config.NOVEL_API_URL.startsWith("http") ? config.NOVEL_API_URL : atob(config.NOVEL_API_URL);
+                    fetchRemoteData(cache);
+                }
+            }
+        } catch (e) {
+            console.error("FAQ 初始化失敗", e);
+        }
+    }
+
+    async function fetchStaticJson() {
+        try {
+            const res = await fetch(JSON_PATH);
+            if (res.ok) {
+                const data = await res.json();
+                // 篩選標題含「問題」或特定格式的資料
+                allFAQ = data.filter(i => String(i["標題"] || "").includes("問題"));
+                render();
+            }
+        } catch (e) { console.warn("靜態 FAQ 載入失敗"); }
+    }
+
+    async function fetchRemoteData(cache) {
+        try {
+            const res = await fetch(`${API_BASE}${API_BASE.includes('?') ? '&' : '?'}type=faq`);
+            const data = await res.json();
+            
+            if (JSON.stringify(data) !== cache) {
+                allFAQ = data;
+                render();
+                localStorage.setItem('cache_faq', JSON.stringify(data));
+            }
+        } catch(e) { console.error(e); }
+    }
+
+    function render() {
+        const container = document.getElementById('faq-content');
+        if (allFAQ.length === 0) {
+            container.innerHTML = '<div class="loading-text">目前尚無紀錄。</div>';
+            return;
+        }
+
+        container.innerHTML = allFAQ.map((item, index) => `
+            <div class="faq-item" onclick="toggleFaq(${index})">
+                <div class="faq-question">${item["標題"] || "未命名問題"}</div>
+                <div class="faq-answer">${item["貼文內容"] || item["內容"] || "尚無詳細解答。"}</div>
+            </div>
+        `).join('');
+    }
+
+    // 暴露至全域供 onclick 使用
+    window.toggleFaq = (index) => {
+        const items = document.querySelectorAll('.faq-item');
+        items[index].classList.toggle('active');
+    };
+
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
