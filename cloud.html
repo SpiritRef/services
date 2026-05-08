@@ -3,144 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>背景雲朵樣式測試 | 鬼磕頭</title>
+    <title>背景效果預覽 | 鬼磕頭</title>
     <style>
-        /* 基礎樣式（與你的頁面一致） */
-        body {
-            background: #121212;
-            color: #eee;
-            font-family: sans-serif;
-            margin: 0;
+        :root {
+            /* 💡 你的原始配色配置 */
+            --primary-color: #2c3e50; /* 專業深灰藍 */
+            --accent-color: #d4af37;  /* 金色 (Gold) */
+            --bg-color: #2c3e50;      /* 背景維持深灰藍 */
+            --text-color: #333;
+        }
+
+        body { 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; /* 防止雲朵產生橫向捲軸 */
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-            transition: background 0.5s;
         }
 
-        .test-box {
-            background: rgba(30, 30, 30, 0.9);
-            padding: 40px;
+        /* 💡 金色雲朵背景容器 */
+        #cloud-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            pointer-events: none;
+        }
+
+        /* 💡 金色雲朵樣式 */
+        .cloud {
+            position: absolute;
+            color: rgba(212, 175, 55, 0.3); /* 金色透明度調整 */
+            font-family: serif;
+            user-select: none;
+            filter: blur(1px); /* 輕微模糊更有氛圍感 */
+            animation: drift var(--duration) infinite linear;
+        }
+
+        @keyframes drift {
+            from { transform: translateX(-300px); }
+            to { transform: translateX(calc(100vw + 300px)); }
+        }
+
+        /* 💡 白色內容容器 */
+        .container { 
+            max-width: 800px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95); /* 白色底，微透明 */
+            padding: 50px 30px; 
             border-radius: 12px;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             text-align: center;
-            z-index: 10;
-            max-width: 400px;
+            backdrop-filter: blur(8px); /* 磨砂玻璃效果，雲飄過時會有透影 */
+            z-index: 1;
         }
 
-        h1 { color: #ffc107; margin-bottom: 20px; }
-
-        /* 切換按鈕（套用 menu-item 配色） */
-        .btn-group { display: flex; flex-direction: column; gap: 10px; }
-        .style-btn {
-            padding: 10px 20px;
-            border: 1px solid #444;
-            background: #2a2a2a;
-            color: white;
-            cursor: pointer;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
+        h1 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 10px; }
+        p { color: var(--text-color); font-size: 1.1rem; line-height: 1.8; }
+        
+        .preview-hint {
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.9rem;
+            font-style: italic;
         }
-        .style-btn:hover {
-            background: rgba(255, 193, 7, 0.1);
-            color: #ffc107;
-            border-color: #ffc107;
-        }
-
-        /* --- 樣式 A：靈界迷霧 (Mist) --- */
-        .mist-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none; visibility: hidden;
-        }
-        .mist {
-            position: absolute; width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
-            filter: blur(50px); border-radius: 50%;
-            animation: drift-mist 15s infinite alternate ease-in-out;
-        }
-        @keyframes drift-mist {
-            from { transform: translate(-10%, -10%) scale(1); opacity: 0.3; }
-            to { transform: translate(20%, 10%) scale(1.3); opacity: 0.7; }
-        }
-
-        /* --- 樣式 B：和風金邊雲 (Stroke Cloud) --- */
-        .stroke-cloud {
-            position: fixed; z-index: -1; pointer-events: none;
-            font-size: 15rem; color: transparent; visibility: hidden;
-            -webkit-text-stroke: 1px rgba(255, 193, 7, 0.15);
-            animation: float-y 8s infinite ease-in-out;
-        }
-        @keyframes float-y {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-30px); }
-        }
-
-        /* --- 樣式 C：層次漂浮符號 (Symbol Cloud) --- */
-        .cloud-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none; visibility: hidden;
-        }
-        .cloud-bg span {
-            position: absolute; color: rgba(255, 255, 255, 0.05);
-            animation: drift-x 30s infinite linear;
-        }
-        @keyframes drift-x {
-            from { transform: translateX(-200px); }
-            to { transform: translateX(100vw); }
-        }
-
-        /* 控制顯示的類別 */
-        .show { visibility: visible !important; }
     </style>
 </head>
 <body>
 
-    <div id="styleA" class="mist-container">
-        <div class="mist" style="top: -100px; left: -100px;"></div>
-        <div class="mist" style="bottom: -100px; right: -100px; animation-delay: -5s;"></div>
-    </div>
+    <div id="cloud-container"></div>
 
-    <span id="styleB" class="stroke-cloud" style="top: 10%; right: 10%;">☁</span>
-    <span id="styleB2" class="stroke-cloud" style="bottom: 10%; left: 5%; font-size: 10rem; animation-delay: -2s;">☁</span>
-
-    <div id="styleC" class="cloud-bg">
-        <span style="top: 20%; font-size: 80px; animation-duration: 20s;">☁</span>
-        <span style="top: 50%; font-size: 150px; animation-duration: 45s; opacity: 0.02;">☁</span>
-        <span style="top: 80%; font-size: 50px; animation-duration: 30s; animation-delay: -10s;">☁</span>
-    </div>
-
-    <div class="test-box">
-        <h1>背景雲朵測試</h1>
-        <p>請點擊下方按鈕切換不同氛圍</p>
-        <div class="btn-group">
-            <button class="style-btn" onclick="switchStyle('A')">樣式 A：靈界迷霧</button>
-            <button class="style-btn" onclick="switchStyle('B')">樣式 B：金邊和風雲</button>
-            <button class="style-btn" onclick="switchStyle('C')">樣式 C：多層次漂流雲</button>
-            <button class="style-btn" onclick="switchStyle('none')">關閉所有效果</button>
-        </div>
+    <div class="container">
+        <h1>背景效果預覽</h1>
+        <p>
+            這是你要的視覺效果：<br>
+            底色維持<b>深灰藍 (#2c3e50)</b>，<br>
+            背景中有<b>大量金色雲朵</b>緩慢漂浮，<br>
+            中間則是<b>純白色的內容區塊</b>。
+        </p>
+        <div class="preview-hint">請觀察背景雲朵的動態與容器後方的透影感</div>
     </div>
 
     <script>
-        function switchStyle(type) {
-            // 先隱藏所有
-            document.getElementById('styleA').classList.remove('show');
-            document.getElementById('styleB').classList.remove('show');
-            document.getElementById('styleB2').classList.remove('show');
-            document.getElementById('styleC').classList.remove('show');
+        /**
+         * 💡 自動生成大量雲朵
+         */
+        function generateClouds() {
+            const container = document.getElementById('cloud-container');
+            const count = 25; // 💡 雲朵數量：多一點
+            
+            for (let i = 0; i < count; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                cloud.innerText = '☁';
+                
+                // 隨機大小 (80px 到 250px)
+                const size = Math.random() * 170 + 80;
+                cloud.style.fontSize = size + 'px';
+                
+                // 隨機高度 (0% 到 100%)
+                cloud.style.top = Math.random() * 100 + '%';
+                
+                // 隨機速度 (30秒 到 90秒，速度不一才有層次感)
+                const duration = Math.random() * 60 + 30;
+                cloud.style.setProperty('--duration', duration + 's');
+                
+                // 隨機延遲，讓雲朵在畫面各處開始
+                cloud.style.animationDelay = (Math.random() * -duration) + 's';
+                
+                // 隨機透明度
+                cloud.style.opacity = Math.random() * 0.25 + 0.1;
 
-            // 顯示對應樣式
-            if (type === 'A') {
-                document.getElementById('styleA').classList.add('show');
-            } else if (type === 'B') {
-                document.getElementById('styleB').classList.add('show');
-                document.getElementById('styleB2').classList.add('show');
-            } else if (type === 'C') {
-                document.getElementById('styleC').classList.add('show');
+                container.appendChild(cloud);
             }
         }
+        
+        // 啟動
+        window.onload = generateClouds;
     </script>
 </body>
 </html>
