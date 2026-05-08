@@ -6,7 +6,7 @@
     <title>常見問題紀錄 | 鬼磕頭</title>
     <link rel="icon" href="../pic/GhostKowtow.jpg" type="image/jpeg">
     <link rel="stylesheet" href="../CSS/Services.css">
-    <link rel="stylesheet" href="../CSS/postFB.css">
+    <link rel="stylesheet" href="../../ghoststory/CSS/postFB.css">
     <style>
         /* 強制覆蓋背景，確保不是全白 */
         body { background: #121212 !important; margin: 0; padding: 0; color: #eee; font-family: sans-serif; }
@@ -191,7 +191,7 @@
         if (!menuContent) return;
         menuContent.innerHTML = menuData.split('|').map(item => {
             const [text, link, icon] = item.split(',');
-            return `<a href="../${link}" class="menu-item"><span class="icon">${icon}</span> <span class="text">${text}</span></a>`;
+            return `<a href="../../ghoststory/${link}" class="menu-item"><span class="icon">${icon}</span> <span class="text">${text}</span></a>`;
         }).join('');
     }
 
