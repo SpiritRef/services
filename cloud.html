@@ -6,10 +6,10 @@
     <title>多種雲圖案效果展示 | 鬼磕頭</title>
     <style>
         :root {
-            /* 💡 沿用深灰藍與金色配色 */
+            /* 💡 你的配色設定 */
             --primary-color: #2c3e50;
             --accent-color: #d4af37;
-            --bg-color: #f7f7f7; /* 背景維持深色 */
+            --bg-color: #f7f7f7; /* 回歸淺色底 */
             --text-color: #333;
         }
 
@@ -23,9 +23,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
-        /* 💡 背景容器 */
+        /* 💡 背景雲朵容器 */
         #cloud-container {
             position: fixed;
             top: 0;
@@ -36,32 +37,64 @@
             pointer-events: none;
         }
 
-        /* 💡 雲朵通用樣式 */
+        /* 💡 雲朵樣式：針對淺色底優化金色透明度 */
         .cloud-item {
             position: absolute;
-            color: rgba(212, 175, 55, 0.3); /* 金色透明度 */
-            fill: currentColor; /* 讓 SVG 繼承顏色 */
+            color: rgba(212, 175, 55, 0.25); /* 稍微調深一點點，確保在白底看得見 */
+            fill: currentColor;
             user-select: none;
-            filter: blur(1px); /* 輕微模糊增加神祕感 */
+            filter: blur(1px);
             animation: drift var(--duration) infinite linear;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* 💡 動畫：從左到右 */
         @keyframes drift {
             from { transform: translateX(-350px); }
             to { transform: translateX(calc(100vw + 350px)); }
         }
 
-        /* 💡 白色內容容器 */
+        /* 💡 內容容器 */
         .container { 
             max-width: 800px;
             width: 90%;
             background: rgba(255, 255, 255, 0.95); 
             padding: 50px 30px; 
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* 淺色底配輕微陰影 */
             text-align: center;
-            backdrop-
+            backdrop-filter: blur(8px); /* 磨砂玻璃效果 */
+            z-index: 1;
+            box-sizing: border-box;
+        }
+
+        h1 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 10px; margin-top: 0; }
+        p { color: var(--text-color); font-size: 1.1rem; line-height: 1.8; }
+        
+        .preview-hint { margin-top: 30px; color: #999; font-size: 0.9rem; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div id="cloud-container"></div>
+
+    <div class="container">
+        <h1>淺色底金雲效果</h1>
+        <p>
+            這是在 <b>#f7f7f7 淺灰色背景</b> 下的效果。<br>
+            金色雲朵轉變為如同浮水印般的存在，<br>
+            增加了頁面的層次感而不搶走文字的焦點。
+        </p>
+        <div class="preview-hint">背景雲朵包含四種形狀，隨機生成 25 朵雲。</div>
+    </div>
+
+    <script>
+        const CLOUD_SHAPES = [
+            { type: 'text', content: '☁' },
+            // 勾邊雲
+            { type: 'svg', viewBox: '0 0 24 24', content: '<path d="M17.5,19c-3.037,0-5.5-2.463-5.5-5.5c0-0.106,0.003-0.211,0.01-0.316C10.74,12.551,9,10.479,9,8c0-3.314,2.686-6,6-6 c2.557,0,4.743,1.599,5.61,3.857C21.43,5.313,22.285,5,23.25,5c2.071,0,3.75,1.679,3.75,3.75c0,0.229-0.021,0.453-0.061,0.67 C28.375,10.23,29.5,11.734,29.5,13.5c0,2.485-2.015,4.5-4.5,4.5c-0.106,0-0.211-0.004-0.315-0.011C23.633,18.669,21.696,19,19.5,19 c-0.686,0-1.348-0.06-1.99-0.174C17.507,18.91,17.5,18.955,17.5,19z"></path>' },
+            // 實心雲
+            { type: 'svg', viewBox: '0 0 100 100', content: '<circle cx="30" cy="50" r="20"/><circle cx="55" cy="45" r="25"/><circle cx="80" cy="55" r="20"/><rect x="30" y="55" width="50" height="15"/>' },
+            // 長流雲
+            { type: 'svg', viewBox: '0 0 100 40', content: '<ellipse cx="30" cy="20" rx="15" ry="10"></ellipse><ellipse cx="50" cy="20" rx="20" ry="15"></ellipse><ellipse cx="75" cy="25" rx="15" ry="10"></ellipse><rect x="10" y="25"
