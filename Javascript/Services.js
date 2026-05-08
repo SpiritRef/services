@@ -71,7 +71,12 @@ async function loadStaticData(path, type) {
         console.log(`📄 成功讀取靜態 ${type} JSON`);
         
         if (type === 'notice') {
-            allNotices = Array.isArray(data) ? data : (data.notices || []);
+            const rawData = Array.isArray(data) ? data : (data.notices || []);
+            allNotices = rawData.filter(item => {
+                const title = item["標題"] || ""; // 取得標題，若無則設為空字串
+                return title.includes("公告");    // 只有包含「公告」的會回傳 true 並被保留
+            });
+            
             renderNotices();
         } else if (type === 'service'){
             allServices = Array.isArray(data) ? data : (data.services || []);
@@ -83,39 +88,55 @@ async function loadStaticData(path, type) {
 }
 
 /**
- * 從不同的 API 獲取資料並進行過濾
+ * 從不同的 API 獲取資料並進行過濾 (優化版：獨立執行不互相等待)
  */
 async function fetchRemoteData() {
-    try {
-        const [noticeRes, serviceRes] = await Promise.allSettled([
-            fetch(`${NOVEL_API_URL}${NOVEL_API_URL.includes('?') ? '&' : '?'}type=notice`).then(res => res.json()),
-            fetch(`${SERVICE_API_URL}${SERVICE_API_URL.includes('?') ? '&' : '?'}type=service`).then(res => res.json())
-        ]);
-        if (serviceRes.status === 'fulfilled') {
-            let newServices = serviceRes.value.filter(item => !String(item["標題"] || "").includes("公告"));
+    // 1. 定義服務項目的同步邏輯
+    const syncServices = async () => {
+        try {
+            const res = await fetch(`${SERVICE_API_URL}${SERVICE_API_URL.includes('?') ? '&' : '?'}type=service`);
+            if (!res.ok) return;
+            const data = await res.json();
+            
+            // 篩選掉標題含「公告」的項目
+            let newServices = data.filter(item => !String(item["標題"] || "").includes("公告"));
 
             if (JSON.stringify(newServices) !== localStorage.getItem('cache_services')) {
                 allServices = newServices;
                 localStorage.setItem('cache_services', JSON.stringify(newServices));
-                renderServices(allServices);
+                renderServices(allServices); // 服務一跑完立即渲染
                 console.log("🛠️ 服務項目 API 同步完成");
             }
+        } catch (e) {
+            console.error("服務項目背景同步出錯:", e);
         }
+    };
 
-        if (noticeRes.status === 'fulfilled') {
-            let newData = noticeRes.value.filter(item => String(item["標題"] || "").includes("公告"));
+    // 2. 定義公告的同步邏輯
+    const syncNotices = async () => {
+        try {
+            const res = await fetch(`${NOVEL_API_URL}${NOVEL_API_URL.includes('?') ? '&' : '?'}type=notice`);
+            if (!res.ok) return;
+            const data = await res.json();
+
+            // 只保留標題含「公告」的項目
+            let newData = data.filter(item => String(item["標題"] || "").includes("公告"));
             newData.sort((a, b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
 
             if (JSON.stringify(newData) !== localStorage.getItem('cache_notices')) {
                 allNotices = newData;
                 localStorage.setItem('cache_notices', JSON.stringify(newData));
-                renderNotices();
+                renderNotices(); // 公告一跑完立即渲染
                 console.log("📢 公告區 API 同步完成");
             }
+        } catch (e) {
+            console.error("公告背景同步出錯:", e);
         }
-    } catch (e) {
-        console.error("背景同步出錯:", e);
-    }
+    };
+
+    // 💡 同時啟動，但不使用 await Promise.all，讓它們並行且各自完成後立即觸發更新
+    syncServices();
+    syncNotices();
 }
 
 /**
