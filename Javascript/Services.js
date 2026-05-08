@@ -3,7 +3,7 @@ import { getIni } from './API.js';
 let NOVEL_API_URL = "";    // 用於獲取公告 (來自小說庫試算表)
 let SERVICE_API_URL = "";  // 用於獲取服務項目 (來自服務試算表)
 let JsonDataPath = "";     // 💡 新增：GitHub JSON 路徑
-let JsonService=""
+let JsonService= "";
 const iniPath = 'settings/Services.ini'; 
 
 let allNotices = [];
