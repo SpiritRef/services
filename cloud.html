@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>背景效果預覽 | 鬼磕頭</title>
+    <title>多種雲圖案效果展示 | 鬼磕頭</title>
     <style>
         :root {
-            /* 💡 你的原始配色配置 */
-            --primary-color: #2c3e50; /* 專業深灰藍 */
-            --accent-color: #d4af37;  /* 金色 (Gold) */
-            --bg-color: #2c3e50;      /* 背景維持深灰藍 */
+            /* 💡 沿用深灰藍與金色配色 */
+            --primary-color: #2c3e50;
+            --accent-color: #d4af37;
+            --bg-color: #2c3e50; /* 背景維持深色 */
             --text-color: #333;
         }
 
@@ -18,14 +18,14 @@
             background-color: var(--bg-color); 
             margin: 0; 
             padding: 0; 
-            overflow-x: hidden; /* 防止雲朵產生橫向捲軸 */
+            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* 💡 金色雲朵背景容器 */
+        /* 💡 背景容器 */
         #cloud-container {
             position: fixed;
             top: 0;
@@ -36,96 +36,32 @@
             pointer-events: none;
         }
 
-        /* 💡 金色雲朵樣式 */
-        .cloud {
+        /* 💡 雲朵通用樣式 */
+        .cloud-item {
             position: absolute;
-            color: rgba(212, 175, 55, 0.3); /* 金色透明度調整 */
-            font-family: serif;
+            color: rgba(212, 175, 55, 0.3); /* 金色透明度 */
+            fill: currentColor; /* 讓 SVG 繼承顏色 */
             user-select: none;
-            filter: blur(1px); /* 輕微模糊更有氛圍感 */
+            filter: blur(1px); /* 輕微模糊增加神祕感 */
             animation: drift var(--duration) infinite linear;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* 💡 動畫：從左到右 */
         @keyframes drift {
-            from { transform: translateX(-300px); }
-            to { transform: translateX(calc(100vw + 300px)); }
+            from { transform: translateX(-350px); }
+            to { transform: translateX(calc(100vw + 350px)); }
         }
 
         /* 💡 白色內容容器 */
         .container { 
             max-width: 800px;
             width: 90%;
-            background: rgba(255, 255, 255, 0.95); /* 白色底，微透明 */
+            background: rgba(255, 255, 255, 0.95); 
             padding: 50px 30px; 
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             text-align: center;
-            backdrop-filter: blur(8px); /* 磨砂玻璃效果，雲飄過時會有透影 */
-            z-index: 1;
-        }
-
-        h1 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 10px; }
-        p { color: var(--text-color); font-size: 1.1rem; line-height: 1.8; }
-        
-        .preview-hint {
-            margin-top: 30px;
-            color: #888;
-            font-size: 0.9rem;
-            font-style: italic;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="cloud-container"></div>
-
-    <div class="container">
-        <h1>背景效果預覽</h1>
-        <p>
-            這是你要的視覺效果：<br>
-            底色維持<b>深灰藍 (#2c3e50)</b>，<br>
-            背景中有<b>大量金色雲朵</b>緩慢漂浮，<br>
-            中間則是<b>純白色的內容區塊</b>。
-        </p>
-        <div class="preview-hint">請觀察背景雲朵的動態與容器後方的透影感</div>
-    </div>
-
-    <script>
-        /**
-         * 💡 自動生成大量雲朵
-         */
-        function generateClouds() {
-            const container = document.getElementById('cloud-container');
-            const count = 25; // 💡 雲朵數量：多一點
-            
-            for (let i = 0; i < count; i++) {
-                const cloud = document.createElement('div');
-                cloud.className = 'cloud';
-                cloud.innerText = '☁';
-                
-                // 隨機大小 (80px 到 250px)
-                const size = Math.random() * 170 + 80;
-                cloud.style.fontSize = size + 'px';
-                
-                // 隨機高度 (0% 到 100%)
-                cloud.style.top = Math.random() * 100 + '%';
-                
-                // 隨機速度 (30秒 到 90秒，速度不一才有層次感)
-                const duration = Math.random() * 60 + 30;
-                cloud.style.setProperty('--duration', duration + 's');
-                
-                // 隨機延遲，讓雲朵在畫面各處開始
-                cloud.style.animationDelay = (Math.random() * -duration) + 's';
-                
-                // 隨機透明度
-                cloud.style.opacity = Math.random() * 0.25 + 0.1;
-
-                container.appendChild(cloud);
-            }
-        }
-        
-        // 啟動
-        window.onload = generateClouds;
-    </script>
-</body>
-</html>
+            backdrop-
