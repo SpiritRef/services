@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多種雲圖案效果展示 | 鬼磕頭</title>
+    <title>金邊雲樣式展示 | 鬼磕頭</title>
     <style>
         :root {
-            /* 💡 你的配色設定 */
+            /* 💡 配色設定 */
             --primary-color: #2c3e50;
-            --accent-color: #d4af37;
-            --bg-color: #f7f7f7; /* 回歸淺色底 */
+            --accent-color: #d4af37; /* 亮金色 */
+            --bg-color: #ffffff;      /* 純白底 */
             --text-color: #333;
         }
 
         body { 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
-            background-color: var(--bg-color); 
+            background-color: var(--bg-color); /* 純白底色 */
             margin: 0; 
             padding: 0; 
             overflow-x: hidden;
@@ -26,7 +26,7 @@
             position: relative;
         }
 
-        /* 💡 背景雲朵容器 */
+        /* 💡 背景容器 */
         #cloud-container {
             position: fixed;
             top: 0;
@@ -37,36 +37,50 @@
             pointer-events: none;
         }
 
-        /* 💡 雲朵樣式：針對淺色底優化金色透明度 */
+        /* 💡 雲朵樣式：💡 核心修正：只留金色描邊 */
         .cloud-item {
             position: absolute;
-            color: rgba(212, 175, 55, 0.25); /* 稍微調深一點點，確保在白底看得見 */
-            fill: currentColor;
+            /* 💡 讓 SVG 繼承顏色 */
+            color: var(--accent-color); 
+            /* 💡 重要：中間不填色 */
+            fill: none !important; 
             user-select: none;
-            filter: blur(1px);
+            filter: blur(0.5px); /* 極微模糊，增加溫潤感 */
             animation: drift var(--duration) infinite linear;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
+        /* 💡 強制設定 SVG 內部 Path 的線條樣式 */
+        .cloud-item svg path,
+        .cloud-item svg circle,
+        .cloud-item svg ellipse,
+        .cloud-item svg rect {
+            stroke: currentColor; /* 使用繼承的金色 */
+            stroke-width: 0.8px;   /* 💡 設定線條粗細 */
+            fill: none !important; /* 確保中間不填色 */
+        }
+
+        /* 💡 動畫：從左到右 */
         @keyframes drift {
             from { transform: translateX(-350px); }
             to { transform: translateX(calc(100vw + 350px)); }
         }
 
-        /* 💡 內容容器 */
+        /* 💡 白色內容容器：保持磨砂感與透影 */
         .container { 
             max-width: 800px;
             width: 90%;
             background: rgba(255, 255, 255, 0.95); 
             padding: 50px 30px; 
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* 淺色底配輕微陰影 */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06); /* 柔和陰影 */
             text-align: center;
-            backdrop-filter: blur(8px); /* 磨砂玻璃效果 */
+            backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
             z-index: 1;
             box-sizing: border-box;
+            border: 1px solid rgba(212, 175, 55, 0.1);
         }
 
         h1 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 10px; margin-top: 0; }
@@ -80,21 +94,64 @@
     <div id="cloud-container"></div>
 
     <div class="container">
-        <h1>淺色底金雲效果</h1>
+        <h1>白底金邊雲效果</h1>
         <p>
-            這是在 <b>#f7f7f7 淺灰色背景</b> 下的效果。<br>
-            金色雲朵轉變為如同浮水印般的存在，<br>
-            增加了頁面的層次感而不搶走文字的焦點。
+            請觀察背景的金色雲朵。<br>
+            我們將所有雲朵改為<b>「勾邊」</b>樣式，<br>
+            只有<b>外框是細細的金色</b>，中間是透明的，<br>
+            這讓白底背景顯得輕盈且帶有高級感。
         </p>
-        <div class="preview-hint">背景雲朵包含四種形狀，隨機生成 25 朵雲。</div>
+        <div class="preview-hint">背景包含四種混合雲圖案（全 SVG 勾邊），隨機生成 25 朵。</div>
     </div>
 
     <script>
+        /**
+         * 💡 四種不同的全 SVG 勾邊雲圖案
+         */
         const CLOUD_SHAPES = [
-            { type: 'text', content: '☁' },
-            // 勾邊雲
+            // 1. 古風勾邊雲 (SVG)
             { type: 'svg', viewBox: '0 0 24 24', content: '<path d="M17.5,19c-3.037,0-5.5-2.463-5.5-5.5c0-0.106,0.003-0.211,0.01-0.316C10.74,12.551,9,10.479,9,8c0-3.314,2.686-6,6-6 c2.557,0,4.743,1.599,5.61,3.857C21.43,5.313,22.285,5,23.25,5c2.071,0,3.75,1.679,3.75,3.75c0,0.229-0.021,0.453-0.061,0.67 C28.375,10.23,29.5,11.734,29.5,13.5c0,2.485-2.015,4.5-4.5,4.5c-0.106,0-0.211-0.004-0.315-0.011C23.633,18.669,21.696,19,19.5,19 c-0.686,0-1.348-0.06-1.99-0.174C17.507,18.91,17.5,18.955,17.5,19z"></path>' },
-            // 實心雲
+            // 2. Q版圓潤雲 (SVG 勾邊)
+            { type: 'svg', viewBox: '0 0 24 24', content: '<path d="M17.5,19c-3.037,0-5.5-2.463-5.5-5.5c0-1.218,0.397-2.343,1.07-3.256C12.436,9.508,11.285,9,10,9c-2.209,0-4,1.791-4,4 c0,0.229,0.02,0.452,0.058,0.669C4.83,14.231,4,15.274,4,16.5c0,1.933,1.567,3.5,3.5,3.5h10z"></path>' },
+            // 3. 氣泡描邊雲 (SVG)
             { type: 'svg', viewBox: '0 0 100 100', content: '<circle cx="30" cy="50" r="20"/><circle cx="55" cy="45" r="25"/><circle cx="80" cy="55" r="20"/><rect x="30" y="55" width="50" height="15"/>' },
-            // 長流雲
-            { type: 'svg', viewBox: '0 0 100 40', content: '<ellipse cx="30" cy="20" rx="15" ry="10"></ellipse><ellipse cx="50" cy="20" rx="20" ry="15"></ellipse><ellipse cx="75" cy="25" rx="15" ry="10"></ellipse><rect x="10" y="25"
+            // 4. 日式勾邊流雲 (SVG)
+            { type: 'svg', viewBox: '0 0 100 40', content: '<ellipse cx="30" cy="20" rx="15" ry="10"></ellipse><ellipse cx="50" cy="20" rx="20" ry="15"></ellipse><ellipse cx="75" cy="25" rx="15" ry="10"></ellipse><rect x="10" y="25" width="60" height="5" rx="2"></rect>' }
+        ];
+
+        function generateMixedClouds() {
+            const container = document.getElementById('cloud-container');
+            const count = 25; // 數量維持 25 朵
+            
+            for (let i = 0; i < count; i++) {
+                const cloudEl = document.createElement('div');
+                cloudEl.className = 'cloud-item';
+                
+                const shape = CLOUD_SHAPES[Math.floor(Math.random() * CLOUD_SHAPES.length)];
+                
+                // 全用 SVG，不再用文字元
+                cloudEl.innerHTML = `<svg viewBox="${shape.viewBox}" style="width:100%; height:100%;">${shape.content}</svg>`;
+
+                // 💡 隨機屬性
+                const size = Math.random() * 140 + 80; // 大小隨機 (80px 到 220px)
+                cloudEl.style.width = size + 'px';
+                cloudEl.style.height = (size * 0.6) + 'px';
+                
+                cloudEl.style.top = Math.random() * 100 + '%';
+                const duration = Math.random() * 70 + 40; // 速度不一 (40秒 到 110秒)
+                cloudEl.style.setProperty('--duration', duration + 's');
+                cloudEl.style.animationDelay = (Math.random() * -duration) + 's';
+                
+                // 💡 鏡像翻轉，增加多樣性
+                if (Math.random() > 0.5) {
+                    cloudEl.style.transform = 'scaleX(-1)'; 
+                }
+
+                container.appendChild(cloudEl);
+            }
+        }
+        
+        window.onload = generateMixedClouds;
+    </script>
+</body>
+</html>
