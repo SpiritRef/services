@@ -265,7 +265,7 @@ function renderVisualRecords(displayData, totalCount) {
     // 💡 關鍵：控制「顯示所有」按鈕
     // 只有當總影片數大於 6 時，才顯示該按鈕
     if (btn) {
-        btn.style.display = totalCount > 6 ? 'inline-block' : 'none';
+        btn.style.display = 'inline-block';
     }
 }
 function getYouTubeEmbedUrl(url) {
