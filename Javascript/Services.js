@@ -1,5 +1,5 @@
 import { getIni } from './API.js';
-import { * } from 'https://spiritref.github.io/Javascript/global.js';
+import * as Global from 'https://spiritref.github.io/Javascript/global.js';
 
 let NOVEL_API_URL = "";    
 let SERVICE_API_URL = "";  
@@ -20,7 +20,7 @@ async function initApp() {
 
     try {
         const config = await getIni(iniPath);
-        if (config.MENU_DATA) initMenu(config.MENU_DATA);
+        if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
         if (config) {
             JsonDataPath = config.JsonData;
             JsonServicePath = config.JsonService;
