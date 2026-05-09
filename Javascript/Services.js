@@ -1,4 +1,5 @@
 import { getIni } from './API.js';
+import { * } from 'https://spiritref.github.io/Javascript/global.js';
 
 let NOVEL_API_URL = "";    
 let SERVICE_API_URL = "";  
