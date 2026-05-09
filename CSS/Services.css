@@ -24,6 +24,10 @@ header {
 	top: 0; 
 	z-index: 100; 
 }
+html {
+    scroll-behavior: smooth; /* 增加平滑捲動效果 */
+    scroll-padding-top: 80px; /* 這裡的數值請根據您 header 的實際高度調整 */
+}
 .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; color: var(--primary-color); }
 nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font-size: 0.9rem; }
 
