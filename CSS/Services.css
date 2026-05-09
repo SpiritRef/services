@@ -120,6 +120,10 @@ footer p {
         flex-direction: column; /* 💡 讓 Logo 和 導覽連結分兩行展示，或是縮小字體 */
         gap: 10px;
     }
+	html {
+        /* 手機版建議設定在 110px ~ 120px 之間 */
+        scroll-padding-top: 120px; 
+    }
     nav a {
         margin-left: 10px; /* 縮小連結間距 */
         font-size: 0.8rem;
