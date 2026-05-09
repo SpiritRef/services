@@ -9,6 +9,7 @@ const iniPath = 'https://spiritref.github.io/settings/global.ini';
 
 let allNotices = [];
 let allServices = [];
+let allVisualRecords = [];
 let allFAQs = [];
 
 /**
