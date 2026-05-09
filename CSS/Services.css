@@ -30,6 +30,11 @@ header {
 }
 .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; color: var(--primary-color); display: flex; align-items: center;}
 .logo img { height: 35px; margin-right: 10px; vertical-align: middle; }
+.logo-text {
+    font-family: 'Ma Shan Zheng', cursive;
+    color: #333; /* 或者使用 #c0392b 暗紅色更有靈學氛圍 */
+    letter-spacing: 2px; /* 毛筆字稍微拉開一點距離更有質感 */
+}
 nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font-size: 0.9rem; }
 nav a:hover { color: var(--accent-color); }
 
