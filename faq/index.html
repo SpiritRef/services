@@ -73,16 +73,29 @@
     <h1>所有常見問題</h1>
 
     <div class="controls">
-        <div id="totalCount">共 0 筆</div>
-    </div>
-
-    <div id="list-content">載入中...</div>
-
-    <div class="pagination">
-        <button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
-        <span id="pageInfo">第 1 頁</span>
-        <button id="nextBtn" class="page-btn" onclick="nextPage()">下一頁</button>
-    </div>
+	    <div>每頁顯示：
+	        <select id="pageSize" onchange="changePageSize()">
+	            <option value="10">10 條</option>
+	            <option value="20">20 條</option>
+	            <option value="50">50 條</option>
+	        </select>
+	    </div>
+	    <div id="totalCount">共 0 筆</div>
+	</div>
+	
+	<div id="list-content">載入中...</div>
+	
+	<div class="pagination">
+	    <button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
+	    
+	    <span>跳至第 
+	        <select id="pageJump" class="jump-select" onchange="jumpToPage()">
+	            </select> 頁
+	    </span>
+	
+	    <span id="pageInfo">第 1 頁</span>
+	    <button id="nextBtn" class="page-btn" onclick="nextPage()">下一頁</button>
+	</div>
 </div>
 
 <script type="module">
@@ -161,37 +174,50 @@
     }
 
     function render() {
-        const listContent = document.getElementById('list-content');
-        const start = (currentPage - 1) * pageSize;
-        const end = start + pageSize;
-        const pagedData = allFAQs.slice(start, end);
-
-        if (allFAQs.length === 0) {
-            listContent.innerHTML = "目前暫無符合條件的常見問題項目。";
-            return;
-        }
-
-        listContent.innerHTML = pagedData.map((item, index) => {
-            const q = item["標題"] || "常見問題項目";
-            const a = item["貼文內容"] || item["內容"] || "暫無內容";
-			const qNumber = index + 1;
-			
-            // const date = item["發佈日期"] ? new Date(item["發佈日期"]).toLocaleDateString() : "近期";
-			// <<span class="date-label">[更新日期：${date}]</span>
-            return `
-                <div class="notice-item">
-                    <div class="faq-q">Q${qNumber}: ${q}</div>
-                    <div class="faq-a">A: ${a}</div>
-                </div>
-            `;
-        }).join('');
-
-        const maxPage = Math.ceil(allFAQs.length / pageSize) || 1;
-        document.getElementById('pageInfo').innerText = `第 ${currentPage} / ${maxPage} 頁`;
-        document.getElementById('prevBtn').disabled = currentPage === 1;
-        document.getElementById('nextBtn').disabled = end >= allFAQs.length;
-    }
-
+	    const listContent = document.getElementById('list-content');
+	    const start = (currentPage - 1) * pageSize;
+	    const end = start + pageSize;
+	    const pagedData = allFAQs.slice(start, end);
+	
+	    if (allFAQs.length === 0) {
+	        listContent.innerHTML = "目前暫無符合條件的常見問題項目。";
+	        return;
+	    }
+	
+	    // ✨ 核心修正：計算跨頁連續編號 (start + index + 1)
+	    listContent.innerHTML = pagedData.map((item, index) => {
+	        const q = item["標題"] || "常見問題項目";
+	        const a = item["貼文內容"] || item["內容"] || "暫無內容";
+	        const qNumber = start + index + 1; 
+	
+	        return `
+	            <div class="notice-item">
+	                <div class="faq-q">Q${qNumber}: ${q}</div>
+	                <div class="faq-a">A: ${a}</div>
+	            </div>
+	        `;
+	    }).join('');
+	
+	    const maxPage = Math.ceil(allFAQs.length / pageSize) || 1;
+	    
+	    // 更新頁碼文字
+	    document.getElementById('pageInfo').innerText = ` / ${maxPage} 頁`;
+	    document.getElementById('prevBtn').disabled = currentPage === 1;
+	    document.getElementById('nextBtn').disabled = end >= allFAQs.length;
+	
+	    // ✨ 更新跳頁選單內容
+	    const pageJump = document.getElementById('pageJump');
+	    let options = "";
+	    for (let i = 1; i <= maxPage; i++) {
+	        options += `<option value="${i}" ${i === currentPage ? 'selected' : ''}>${i}</option>`;
+	    }
+	    pageJump.innerHTML = options;
+	}
+	// 改變每頁顯示筆數
+	window.changePageSize = () => { pageSize = parseInt(document.getElementById('pageSize').value); currentPage = 1; render(); };
+	
+	// 跳至特定頁數
+	window.jumpToPage = () => { currentPage = parseInt(document.getElementById('pageJump').value); render(); window.scrollTo(0, 0); };
     window.prevPage = () => { if(currentPage > 1) { currentPage--; render(); window.scrollTo(0,0); } };
     window.nextPage = () => { if(currentPage * pageSize < allFAQs.length) { currentPage++; render(); window.scrollTo(0,0); } };
 
