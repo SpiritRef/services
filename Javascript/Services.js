@@ -201,9 +201,10 @@ function renderFAQ() {
     content.innerHTML = displayList.map(item => {
         const q = item["標題"] || "常見問題";
         const a = item["貼文內容"] || item["內容"] || "暫無解答";
+        const qNumber = index + 1;
         return `
             <div class="notice-item" style="display: block; margin-bottom: 15px;">
-                <div class="notice-text" style="font-weight: bold; color: #d4af37;">Q: ${q}</div>
+                <div class="notice-text" style="font-weight: bold; color: #d4af37;">Q${qNumber}: ${q}</div>
                 <div class="notice-text" style="margin-left: 20px; font-size: 0.95em; opacity: 0.9;">A: ${a}</div>
             </div>
         `;
@@ -220,7 +221,7 @@ function renderServices(data) {
         container.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">服務項目整理中。</p>';
         return;
     }
-    container.innerHTML = data.map(item => `
+    container.innerHTML = data.map((item, index) => `
         <div class="card">
             <h3>${item["標題"] || '專業服務'}</h3>
             <p>${item["貼文內容"] || '歡迎洽詢。'}</p>
