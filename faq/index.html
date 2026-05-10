@@ -4,11 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>常見問題解答 | 鬼磕頭</title>
-    <meta name="description" content="針對靈學服務、驅鬼儀式及常見疑問的專業解答。">
+    <title>常見問題 | 鬼磕頭</title>
+    <meta name="description" content="針對靈學服務、驅鬼儀式及常見疑問的專業解答。分享我所看到與遇上的靈界故事。">
 
     <link rel="icon" href="https://spiritref.github.io/GhostKowtow.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="https://spiritref.github.io/ghoststory/pic/GhostKowtow.jpg">
+    <link rel="shortcut icon" href="https://spiritref.github.io/GhostKowtow.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://spiritref.github.io/GhostKowtow.jpg">
+
+    <link rel="stylesheet" href="https://spiritref.github.io/CSS/global.css">
+    <link rel="stylesheet" href="../CSS/Services.css">
+
+    <meta property="og:title" content="常見問題 | 鬼磕頭">
+    <meta property="og:description" content="針對靈學服務、驅鬼儀式及常見疑問的專業解答。分享我所看到與遇上的靈界故事。">
+    <meta property="og:image" content="https://spiritref.github.io/GhostKowtow.jpg">
+    <meta property="og:url" content="https://spiritref.github.io/services/faq/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="鬼磕頭">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="常見問題 | 鬼磕頭">
+    <meta name="twitter:description" content="專業靈學服務與常見疑問解答">
+    <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 
     <style>
         body { font-family: sans-serif; background: #f4f4f4; padding: 20px; color: #333; line-height: 1.6; }
@@ -17,7 +33,7 @@
         
         .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f9f9f9; padding: 10px; border-radius: 5px; font-size: 0.9rem; }
 
-        /* 正確的 FAQ 項目樣式 */
+        /* 樣式對齊首頁 Q&A */
         .notice-item { display: block; margin-bottom: 25px; border-bottom: 1px dotted #eee; padding-bottom: 15px; }
         .notice-item:last-child { border-bottom: none; }
 
@@ -29,6 +45,12 @@
         .page-btn { padding: 6px 14px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 4px; }
         .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .back-home { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #666; font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .list-container { padding: 15px; }
+            .faq-a { margin-left: 5px; }
+        }
     </style>
 </head>
 <body>
@@ -43,13 +65,13 @@
     
 <div class="list-container">
     <a href="../index.html" class="back-home">⬅ 返回首頁</a>
-    <h1>常見問題解答</h1>
+    <h1>所有常見問題</h1>
 
     <div class="controls">
         <div id="totalCount">共 0 筆</div>
     </div>
 
-    <div id="list-content">正在篩選常見問題...</div>
+    <div id="list-content">載入中...</div>
 
     <div class="pagination">
         <button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
@@ -72,7 +94,7 @@
             const config = await getIni(iniPath);
             if (config) {
                 if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
-                // 強制讀取數據源
+                // 讀取數據源 (修正路徑)
                 await fetchStaticJson("../../Data/Notices.json");
             }
         } catch (e) { console.error("初始化失敗", e); }
@@ -89,24 +111,10 @@
     }
 
     function processData(data) {
-        /**
-         * 【關鍵修正：精準篩選】
-         * 排除標題包含「【】」的文章（如【鬼扣應篇】、【神知鬼識】）
-         * 排除標題包含「公告」的文字
-         * 只保留可能是「問題」的項目
-         */
+        // 【核心修正】只顯示常見問題，排除所有帶有【】文章與公告
         allFAQs = data.filter(item => {
             const title = item["標題"] || "";
-            const content = item["貼文內容"] || item["內容"] || "";
-            
-            // 排除所有帶括號的文章分類
-            if (title.includes("【") || title.includes("】")) return false;
-            // 排除公告
-            if (title.includes("公告")) return false;
-            // 排除特定的紀實標題字眼
-            if (title.includes("儀式完成") || title.includes("補氣")) return false;
-            
-            return true; // 剩下的才是常見問題
+            return !title.includes("【") && !title.includes("】") && !title.includes("公告");
         }).sort((a,b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
 
         updateUI();
@@ -124,7 +132,7 @@
         const pagedData = allFAQs.slice(start, end);
 
         if (pagedData.length === 0) {
-            listContent.innerHTML = "目前暫無篩選後的常見問題。";
+            listContent.innerHTML = "目前暫無符合條件的常見問題項目。";
             return;
         }
 
@@ -153,5 +161,8 @@
 
     window.addEventListener('DOMContentLoaded', init);
 </script>
+
+<script type="module" src="https://spiritref.github.io/Javascript/global.js"></script>
+
 </body>
 </html>
