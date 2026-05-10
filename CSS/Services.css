@@ -78,7 +78,7 @@ nav a:hover { color: var(--accent-color); }
 /* 1. 定義字體來源 */
 @font-face {
     font-family: 'WDSenPen'; /* 幫字體取個名字 */
-    src: url('https://spiritref.github.io/Tool/文鼎中钢笔行楷体繁.ttf') format('truetype');
+    src: url('https://spiritref.github.io/Tool/WenDingZhong.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap; /* 確保字體載入前先顯示預設字體，避免文字消失 */
