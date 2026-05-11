@@ -117,8 +117,21 @@
 	<section style="text-align: center; padding: 60px 0;">
 		<h2>靈異日誌紀實</h2>
 		<p>走進鬼磕頭的文字世界，體驗最真實的驚悚感。</p>
-		<a href="../ghoststory/" class="btn">點此進入閱讀</a>
+		<button onclick="goToNovelWithEffect()" class="btn" style="border:none; cursor:pointer;">點此進入閱讀</button>
+		<!-- <a href="../ghoststory/" class="btn">點此進入閱讀</a> -->
 	</section>
+	<div id="door-overlay" style="visibility: hidden; opacity: 0;">
+	    <div id="stage">
+	        <div class="door-container" id="mainDoor">
+	            <div class="door-panel left-door"><div class="ear"></div></div>
+	            <div class="door-panel right-door"><div class="ear"></div></div>
+	            <div class="bolt-system">
+	                <div class="bolt bolt-top"></div>
+	                <div class="bolt bolt-bottom"></div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
 
 	<!-- 6. 聯絡資訊 -->
 	<section id="contact" style="border-top: 1px solid #eee; padding-top: 40px;">
@@ -137,5 +150,29 @@
 </footer>
 <script type="module" src="Javascript/Services.js"></script>
 <script type="module" src="https://spiritref.github.io/Javascript/global.js"></script>
+<script>
+	function goToNovelWithEffect() {
+	    const overlay = document.getElementById('door-overlay');
+	    
+	    // 1. 顯示大門遮罩 (此時門是關著且閂好的)
+	    overlay.style.visibility = 'visible';
+	    overlay.style.opacity = '1';
+	
+	    // 2. 延遲一下，開始拔除門閂
+	    setTimeout(() => {
+	        overlay.classList.add('is-unlocking');
+	    }, 1000);
+	
+	    // 3. 門閂開了，大門向內推開
+	    setTimeout(() => {
+	        overlay.classList.add('is-open');
+	    }, 2200);
+	
+	    // 4. 完全推開並進入迷霧後，跳轉頁面
+	    setTimeout(() => {
+	        window.location.href = "../ghoststory/";
+	    }, 4500);
+	}
+</script>
 </body>
 </html>
