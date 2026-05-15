@@ -103,14 +103,13 @@
 </footer>
 	
 <script type="module">
-    import { getIni } from '../Javascript/API.js';
-    import * as Global from 'https://spiritref.github.io/Javascript/global.js';
+	import * as Global from '/Javascript/global.js';
 
     let allFAQs = [];
     let currentPage = 1;
     let pageSize = 10;
     let SERVICE_API_URL = "";
-    const iniPath = 'https://spiritref.github.io/settings/global.ini';
+    const iniPath = '/settings/global.ini';
 
     async function init() {
         // 1. 優先載入快取 (與 Services.js 邏輯同步)
@@ -120,7 +119,7 @@
         }
 
         try {
-            const config = await getIni(iniPath);
+            const config = await Global.getIni(iniPath);
             if (config) {
                 if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
                 
@@ -228,7 +227,7 @@
     window.addEventListener('DOMContentLoaded', init);
 </script>
 
-<script type="module" src="https://spiritref.github.io/Javascript/global.js"></script>
+<script type="module" src="/Javascript/global.js"></script>
 
 </body>
 </html>
