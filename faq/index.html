@@ -125,7 +125,7 @@
                 
                 // 2. 靜態補位 (若快取無資料，則讀取靜態 JSON)
                 if (allFAQs.length === 0 && config.JsonService) {
-                    await fetchStaticJson("../../" + config.JsonService.replace("../",""));
+                    await fetchStaticJson(config.JsonService);
                 }
 
                 // 3. 遠端同步 (取得加密或明碼 API)
