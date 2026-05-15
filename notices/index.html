@@ -114,15 +114,14 @@
 </footer>
 	
 <script type="module">
-	import { getIni } from '../Javascript/API.js';
-	import * as Global from 'https://spiritref.github.io/Javascript/global.js';
+	import * as Global from '/Javascript/global.js';
 
 	let API_BASE = "";
 	let JSON_PATH = ""; // 💡 儲存 INI 裡的靜態 JSON 路徑
 	let allNotices = [];
 	let currentPage = 1;
 	let pageSize = 10;
-	const iniPath = 'https://spiritref.github.io/settings/global.ini';
+	const iniPath = '/settings/global.ini';
 
 	async function init() {
 		// 1. 優先讀取快取
@@ -133,7 +132,7 @@
 		}
 
 		try {
-			const config = await getIni(iniPath);
+			const config = await Global.getIni(iniPath);
 			if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
 			if (config) {
 				// 💡 讀取 JSON 備份路徑 (例如: ../Data/Notices.json)
@@ -258,6 +257,6 @@
 
 	window.addEventListener('DOMContentLoaded', init);
 </script>
-<script type="module" src="https://spiritref.github.io/Javascript/global.js"></script>
+<script type="module" src="/Javascript/global.js"></script>
 </body>
 </html>
