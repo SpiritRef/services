@@ -1,4 +1,3 @@
-import { getIni } from './API.js';
 import * as Global from '/Javascript/global.js';
 
 let NOVEL_API_URL = "";    
@@ -21,7 +20,7 @@ async function initApp() {
     Global.initGlobalHeader();
     
     try {
-        const config = await getIni(iniPath);
+        const config = await Global.getIni(iniPath);
         if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
         if (config) {
             JsonDataPath = config.JsonData;
