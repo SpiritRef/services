@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>常見問題 | 鬼磕頭</title>
+    <title>超自然現象彙典 | 鬼磕頭</title>
     <meta name="description" content="針對靈學服務、驅鬼儀式及常見疑問的專業解答。">
 
     <link rel="icon" href="https://spiritref.github.io/GhostKowtow.ico" type="image/x-icon">
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://spiritref.github.io/CSS/global.css">
     <link rel="stylesheet" href="../CSS/Services.css">
 
-    <meta property="og:title" content="常見問題 | 鬼磕頭">
+    <meta property="og:title" content="超自然現象彙典 | 鬼磕頭">
     <meta property="og:description" content="針對靈學服務、驅鬼儀式及常見疑問的專業解答。">
     <meta property="og:image" content="https://spiritref.github.io/GhostKowtow.jpg">
     <meta property="og:url" content="https://spiritref.github.io/services/faq/">
@@ -22,7 +22,7 @@
     <meta property="og:site_name" content="鬼磕頭">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="常見問題 | 鬼磕頭">
+    <meta name="twitter:title" content="超自然現象彙典 | 鬼磕頭">
     <meta name="twitter:description" content="專業靈學服務與常見疑問解答">
     <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 
@@ -70,7 +70,7 @@
     
 <div class="list-container">
     <a href="../index.html" class="back-home">&#x2190;&#xFE0E; 返回首頁</a>
-    <h1>所有常見問題</h1>
+    <h1>超自然現象彙典</h1>
 
     <div class="controls">
 	    <div>每頁顯示：
@@ -165,7 +165,7 @@
         if (!data || !Array.isArray(data)) return;
 
         // 【核心篩選】只抓取「分類」為「常見問題」的資料，並按日期排序
-        allFAQs = data.filter(item => String(item["分類"] || "") === "常見問題")
+        allFAQs = data.filter(item => String(item["分類"] || "") === "超自然現象彙典")
                       .sort((a, b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
 
         updateUI();
@@ -189,7 +189,7 @@
 	
 	    // ✨ 核心修正：計算跨頁連續編號 (start + index + 1)
 	    listContent.innerHTML = pagedData.map((item, index) => {
-	        const q = item["標題"] || "常見問題項目";
+	        const q = item["標題"];
 	        const a = item["貼文內容"] || item["內容"] || "暫無內容";
 	        const qNumber = start + index + 1; 
 	
