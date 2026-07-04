@@ -79,9 +79,9 @@ function processServiceData(data) {
         console.log("🛠️ 服務項目已渲染");
     });
 
-    // 💡 任務 2：處理 FAQ (分類：常見問題)
+    // 💡 任務 2：處理 FAQ (分類：超自然現象彙典)
     Promise.resolve().then(() => {
-        allFAQs = data.filter(item => String(item["分類"] || "") === "常見問題");
+        allFAQs = data.filter(item => String(item["分類"] || "") === "超自然現象彙典");
         renderFAQ();
         console.log("❓ FAQ 已渲染");
     });
