@@ -193,12 +193,12 @@ function renderFAQ() {
     const content = document.getElementById('faq-content');
     if (!content) return;
     if (allFAQs.length === 0) {
-        content.innerText = "目前暫無常見問題。";
+        content.innerText = "目前暫無新增超自然現象。";
         return;
     }
     const displayList = allFAQs.slice(0, 5);
     content.innerHTML = displayList.map((item, index) => {
-        const q = item["標題"] || "常見問題";
+        const q = item["標題"] || "超自然現象彙典";
         const a = item["貼文內容"] || item["內容"] || "暫無解答";
         const qNumber = index + 1;
         return `
