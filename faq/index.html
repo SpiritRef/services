@@ -39,6 +39,33 @@
 
         .faq-q { font-weight: bold; color: #c0392b; margin-bottom: 8px; font-size: 1.4rem; }
         .faq-a { margin-left: 15px; font-size: 1.2rem; line-height: 1.2; color: #444; white-space: pre-wrap; }
+		.faq-links { margin-top: 15px; padding-top: 15px;border-top: 1px dashed #2a2a2d;font-size: 0.9rem;color: #88888d;display: flex;flex-wrap: wrap;align-items: center;gap: 8px;}
+		.faq-links a { display: inline-flex; 
+			align-items: center;
+			justify-content: center;
+			text-decoration: none; 
+			
+			/* 背景與邊框：使用您要求的 rgba 背景與金邊 */
+			background: rgba(28, 30, 33, 0.95); 
+			border: 1px solid #ffc107; 
+			
+			/* 字體顏色與間距 */
+			color: #ffc107; 
+			height: 36px;
+			padding: 0px 16px;
+			font-size: 0.9rem; 
+			border-radius: 8px; /* 圓角與選單一致 */
+			margin-top: 12px;
+			
+			/* 動態效果：與懸浮按鈕一樣的過渡 */
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+			box-sizing: border-box;    /* 確保邊框和內距不會額外撐大 button */
+			cursor: pointer;          /* 讓按鈕滑鼠滑過去時也有「小手」指針 */
+			font-family: inherit;     /* 關鍵：強制按鈕繼承網頁主字體，否則 button 字體常會縮小或變形 */
+			line-height: 1; 
+		}
+		.faq-links a:hover { background: #000000; color: #ffc107; transform: scale(1.05); }
         .date-label { display: block; color: #999; font-size: 0.8rem; margin-bottom: 5px; }
 
         .pagination { margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; }
