@@ -41,9 +41,6 @@
         .faq-a { margin-left: 15px; font-size: 1.2rem; line-height: 1.2; color: #444; white-space: pre-wrap; }
         .date-label { display: block; color: #999; font-size: 0.8rem; margin-bottom: 5px; }
 
-		.faq-links { margin-top: 15px; padding-top: 15px;border-top: 1px dashed #2a2a2d;font-size: 0.9rem;color: #88888d;display: flex;flex-wrap: wrap;align-items: center;gap: 8px;}
-		.faq-links a { display: inline-block; padding: 4px 12px; background: #2a2a2d; color: #ff4d4f; text-decoration: none;font-size: 0.8rem; border-radius: 20px;border: 1px solid #3a3a3f; transition: all 0.2s ease; }
-		.faq-links a:hover { background: #a30000; color: #ffffff; border-color: #a30000; transform: scale(1.05); }
         .pagination { margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; }
         .page-btn { padding: 6px 14px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 4px; }
         .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -208,7 +205,7 @@
 	        
 	        // 將連結陣列轉換為 HTML `<a>` 標籤，並以 <br> 換行
 	        const linksHtml = urlArray.length > 0 
-				? `<div class="faq-links"><span>相關文章：</span>${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">文章 ${i + 1}</a>`).join('')}</div>` 
+				? `<div class="back-home"><span>相關文章：</span>${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">文章 ${i + 1}</a>`).join('')}</div>` 
 				: "";
 	
 	        return `
