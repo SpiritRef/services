@@ -200,11 +200,30 @@ function renderFAQ() {
     content.innerHTML = displayList.map((item, index) => {
         const q = item["標題"] || "超自然現象彙典";
         const a = item["貼文內容"] || item["內容"] || "暫無解答";
+        const posturl = item["連結"] || item["貼文連結"] || "";
         const qNumber = index + 1;
+        
+        // 處理多個連結：支援陣列，或是以逗號、換行、空格分隔的字串
+        let urlArray = [];
+        if (Array.isArray(posturl)) {
+            urlArray = posturl;
+        } else if (typeof posturl === "string" && posturl.trim() !== "") {
+            // 利用正規表達式分割字串，並過濾掉空值
+            urlArray = posturl.split(/[,\n\s]+/).filter(url => url.trim() !== "");
+        }
+        
+        // 將連結陣列轉換為 HTML `<a>` 標籤，並以 <br> 換行
+        const linksHtml = urlArray.length > 0 
+            ? `<div class="post-links">
+                 ${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">文章${i + 1}</a>`).join('<br>')}
+               </div>` 
+            : "";
+        
         return `
             <div class="card">
                 <h3>Q${qNumber}: ${q}</h3>
                 <p>A: ${a}</p>
+                ${linksHtml}
             </div>
         `;
     }).join('');
