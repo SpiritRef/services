@@ -202,13 +202,17 @@ function renderFAQ() {
         const a = item["貼文內容"] || item["內容"] || "暫無解答";
         const qNumber = index + 1;
         return `
-            <div class="notice-item" style="display: block; margin-bottom: 15px;">
-                <div class="notice-text" style="font-weight: bold; color: #d4af37;">Q${qNumber}: ${q}</div>
-                <div class="notice-text" style="margin-left: 20px; font-size: 0.95em; opacity: 0.9;">A: ${a}</div>
+            <div class="card">
+                <h3>Q${qNumber}: ${q}</h3>
+                <p>A: ${a}</p>
             </div>
         `;
     }).join('');
 }
+            // <div class="notice-item" style="display: block; margin-bottom: 15px;">
+            //     <div class="notice-text" style="font-weight: bold; color: #d4af37;">Q${qNumber}: ${q}</div>
+            //     <div class="notice-text" style="margin-left: 20px; font-size: 0.95em; opacity: 0.9;">A: ${a}</div>
+            // </div>
 
 /**
  * 渲染服務項目卡片
