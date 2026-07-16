@@ -27,7 +27,7 @@
     <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; color: #333; line-height: 1.6; }
+        body { font-family: "Noto Serif TC", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", serif; background: #f5f4f0; padding: 20px; color: #333; line-height: 1.8; }
         .list-container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         h1 { border-bottom: 2px solid #c0392b; padding-bottom: 10px; font-size: 1.5rem; color: #333; }
         
@@ -41,6 +41,9 @@
         .faq-a { margin-left: 15px; font-size: 1.2rem; line-height: 1.2; color: #444; white-space: pre-wrap; }
         .date-label { display: block; color: #999; font-size: 0.8rem; margin-bottom: 5px; }
 
+		.faq-links { margin-top: 15px; padding-top: 15px;border-top: 1px dashed #2a2a2d;font-size: 0.9rem;color: #88888d;display: flex;flex-wrap: wrap;align-items: center;gap: 8px;}
+		.faq-links a { display: inline-block; padding: 4px 12px; background: #2a2a2d; color: #ff4d4f; text-decoration: none;font-size: 0.8rem; border-radius: 20px;border: 1px solid #3a3a3f; transition: all 0.2s ease; }
+		.faq-links a:hover { background: #a30000; color: #ffffff; border-color: #a30000; transform: scale(1.05); }
         .pagination { margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; }
         .page-btn { padding: 6px 14px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 4px; }
         .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -205,13 +208,16 @@
 	        
 	        // 將連結陣列轉換為 HTML `<a>` 標籤，並以 <br> 換行
 	        const linksHtml = urlArray.length > 0 
-	            ? `\n\n參考資料：${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">文章${i + 1}</a>`).join('\t')}` 
-	            : "";
+				? `<div class="faq-links"><span>相關文章：</span>${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">文章 ${i + 1}</a>`).join('')}</div>` 
+				: "";
 	
 	        return `
 	            <div class="notice-item">
 	                <div class="faq-q">Q${qNumber}: ${q}</div>
-	                <div class="faq-a"><span><a>A: ${a}</a></span>${linksHtml}</div>
+	                <div class="faq-a">
+						<div class="faq-answer-text">A: ${a}</div>
+						${linksHtml}
+					</div>
 	            </div>
 	        `;
 	    }).join('');
