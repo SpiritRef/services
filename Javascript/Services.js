@@ -214,7 +214,7 @@ function renderFAQ() {
         
         // 將連結陣列轉換為 HTML `<a>` 標籤，並以 <br> 換行
         const linksHtml = urlArray.length > 0 
-            ? `<div class="card">
+            ? `<div class="faq-links"><span>相關文章：</span>
                  ${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">文章${i + 1}</a>`).join('\t')}
                </div>` 
             : "";
