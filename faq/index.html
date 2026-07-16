@@ -27,28 +27,206 @@
     <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; color: #333; line-height: 1.6; }
-        .list-container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h1 { border-bottom: 2px solid #c0392b; padding-bottom: 10px; font-size: 1.5rem; color: #333; }
+        :root {
+            --primary-color: #c0392b;
+            --primary-light: #fbecec;
+            --bg-color: #f3f4f6;
+            --text-main: #374151;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg-color); 
+            padding: 30px 15px; 
+            color: var(--text-main); 
+            line-height: 1.7; 
+            margin: 0;
+        }
         
-        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f9f9f9; padding: 10px; border-radius: 5px; font-size: 0.9rem; }
+        .list-container { 
+            max-width: 800px; 
+            margin: auto; 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        }
 
-        /* 樣式對齊首頁 Q&A 紅黑風格 */
-        .notice-item { display: block; margin-bottom: 25px; border-bottom: 1px dotted #eee; padding-bottom: 15px; }
-        .notice-item:last-child { border-bottom: none; }
+        /* 標題與返回首頁 */
+        .header-section {
+            margin-bottom: 25px;
+        }
+        .back-home {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .back-home:hover {
+            color: var(--primary-color);
+            transform: translateX(-3px);
+        }
+        h1 { 
+            margin: 0;
+            font-size: 1.8rem; 
+            color: #1f2937; 
+            position: relative;
+            padding-bottom: 12px;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        /* 控制列 */
+        .controls { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            background: #f8fafc; 
+            padding: 12px 18px; 
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap; 
+            gap: 15px;
+        }
 
-        .faq-q { font-weight: bold; color: #c0392b; margin-bottom: 8px; font-size: 1.4rem; }
-        .faq-a { margin-left: 15px; font-size: 1.2rem; line-height: 0.8; color: #444; white-space: pre-wrap; }
-        .date-label { display: block; color: #999; font-size: 0.8rem; margin-bottom: 5px; }
+        select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        select:focus {
+            border-color: var(--primary-color);
+        }
 
-        .pagination { margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; }
-        .page-btn { padding: 6px 14px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 4px; }
-        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* 卡片設計：Q&A 區塊 */
+        #list-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .notice-item { 
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .notice-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border-color: #d1d5db;
+        }
+
+        /* 題目 (Q) */
+        .faq-q { 
+            font-weight: 700; 
+            color: var(--primary-color); 
+            margin-bottom: 12px; 
+            font-size: 1.3rem; 
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        /* 解答 (A) */
+        .faq-a { 
+            font-size: 1.1rem; 
+            line-height: 1.7; /* 原本 0.8 太擠，調整為 1.7 提升閱讀體驗 */
+            color: #4b5563; 
+            white-space: pre-wrap; /* 讓 \t 和換行生效 */
+            background: #fdfdfd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+        }
+        
+        /* 連結樣式 */
+        .doc-link {
+            color: #0284c7;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .doc-link:hover {
+            color: #0369a1;
+            text-decoration: underline;
+        }
+
+        /* 分頁按鈕 */
+        .pagination { 
+            margin-top: 30px; 
+            display: flex; 
+            gap: 12px; 
+            justify-content: center; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        .page-btn { 
+            padding: 8px 18px; 
+            border: 1px solid var(--border-color); 
+            background: var(--card-bg); 
+            color: var(--text-main);
+            font-weight: 500;
+            cursor: pointer; 
+            border-radius: 6px; 
+            transition: all 0.2s;
+        }
+        .page-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .page-btn:disabled { 
+            opacity: 0.4; 
+            cursor: not-allowed; 
+            background: #f9fafb;
+        }
+        #pageInfo {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
 
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            .list-container { padding: 15px; }
-            .faq-a { margin-left: 5px; }
+            body { padding: 15px 10px; }
+            .list-container { padding: 25px 20px; }
+            h1 { font-size: 1.5rem; }
+            .controls { flex-direction: column; align-items: stretch; text-align: center; }
+            .controls > div { display: flex; justify-content: center; align-items: center; }
+            .notice-item { padding: 20px 15px; }
+            .faq-q { font-size: 1.2rem; }
+            .faq-a { font-size: 1rem; padding: 12px; }
+            .pagination { gap: 8px; }
+            .page-btn { padding: 6px 12px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -58,52 +236,54 @@
     <div class="menu-content" id="menuContent"></div>
     <button class="floating-service-btn" id="serviceBtn" onclick="toggleMenu()">
         <span id="serviceIcon">
-	        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-	            <line x1="3" y1="12" x2="21" y2="12"></line>
-	            <line x1="3" y1="6" x2="21" y2="6"></line>
-	            <line x1="3" y1="18" x2="21" y2="18"></line>
-	        </svg>
-	    </span>
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </span>
         <span id="serviceText">選單</span>
     </button>
 </div>
     
 <div class="list-container">
-    <a href="../index.html" class="back-home">&#x2190;&#xFE0E; 返回首頁</a>
-    <h1>超自然現象彙典</h1>
+    <div class="header-section">
+        <a href="../index.html" class="back-home">&#x2190;&#xFE0E; 返回首頁</a>
+        <h1>超自然現象彙典</h1>
+    </div>
 
     <div class="controls">
-	    <div>每頁顯示：
-	        <select id="pageSize" onchange="changePageSize()">
-	            <option value="10">10 條</option>
-	            <option value="20">20 條</option>
-	            <option value="50">50 條</option>
-	        </select>
-	    </div>
-	    <div id="totalCount">共 0 筆</div>
-	</div>
-	
-	<div id="list-content">載入中...</div>
-	
-	<div class="pagination">
-	    <button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
-	    
-	    <span>跳至第 
-	        <select id="pageJump" class="jump-select" onchange="jumpToPage()">
-	            </select> 頁
-	    </span>
-	
-	    <span id="pageInfo">第 1 頁</span>
-	    <button id="nextBtn" class="page-btn" onclick="nextPage()">下一頁</button>
-	</div>
+        <div>每頁顯示：&nbsp;
+            <select id="pageSize" onchange="changePageSize()">
+                <option value="10">10 條</option>
+                <option value="20">20 條</option>
+                <option value="50">50 條</option>
+            </select>
+        </div>
+        <div id="totalCount">共 0 筆</div>
+    </div>
+    
+    <div id="list-content">載入中...</div>
+    
+    <div class="pagination">
+        <button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
+        
+        <span>跳至第 
+            <select id="pageJump" onchange="jumpToPage()">
+            </select> 頁
+        </span>
+    
+        <span id="pageInfo"> / 1 頁</span>
+        <button id="nextBtn" class="page-btn" onclick="nextPage()">下一頁</button>
+    </div>
 </div>
-	
+    
 <footer>
-	<p>&copy; 2026 鬼磕頭. All Rights Reserved.</p>
+    <p>&copy; 2026 鬼磕頭. All Rights Reserved.</p>
 </footer>
-	
+    
 <script type="module">
-	import * as Global from '/Javascript/global.js';
+    import * as Global from '/Javascript/global.js';
 
     let allFAQs = [];
     let currentPage = 1;
@@ -112,7 +292,6 @@
     const iniPath = '/settings/global.ini';
 
     async function init() {
-        // 1. 優先載入快取 (與 Services.js 邏輯同步)
         const cached = localStorage.getItem('cache_services');
         if (cached) {
             processData(JSON.parse(cached));
@@ -123,12 +302,10 @@
             if (config) {
                 if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
                 
-                // 2. 靜態補位 (若快取無資料，則讀取靜態 JSON)
                 if (allFAQs.length === 0 && config.JsonService) {
                     await fetchStaticJson(config.JsonService);
                 }
 
-                // 3. 遠端同步 (取得加密或明碼 API)
                 if (config.SERVICE_API_URL) {
                     SERVICE_API_URL = config.SERVICE_API_URL.startsWith("http") ? config.SERVICE_API_URL : atob(config.SERVICE_API_URL);
                     fetchRemoteData();
@@ -153,7 +330,6 @@
             if (!res.ok) return;
             const data = await res.json();
             
-            // 若資料有更新，存入快取並重新渲染
             if (JSON.stringify(data) !== localStorage.getItem('cache_services')) {
                 localStorage.setItem('cache_services', JSON.stringify(data));
                 processData(data);
@@ -164,7 +340,6 @@
     function processData(data) {
         if (!data || !Array.isArray(data)) return;
 
-        // 【核心篩選】只抓取「分類」為「常見問題」的資料，並按日期排序
         allFAQs = data.filter(item => String(item["分類"] || "") === "超自然現象彙典")
                       .sort((a, b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
 
@@ -177,72 +352,61 @@
     }
 
     function render() {
-	    const listContent = document.getElementById('list-content');
-	    const start = (currentPage - 1) * pageSize;
-	    const end = start + pageSize;
-	    const pagedData = allFAQs.slice(start, end);
-	
-	    if (allFAQs.length === 0) {
-	        listContent.innerHTML = "目前暫無符合條件的常見問題項目。";
-	        return;
-	    }
-	
-	    // ✨ 核心修正：計算跨頁連續編號 (start + index + 1)
-	    listContent.innerHTML = pagedData.map((item, index) => {
-	        const q = item["標題"];
-	        const a = item["貼文內容"] || item["內容"] || "暫無內容";
-			const posturl = item["連結"] || item["貼文連結"] || "";
-	        const qNumber = start + index + 1; 
-	        
-	        // 處理多個連結：支援陣列，或是以逗號、換行、空格分隔的字串
-	        let urlArray = [];
-	        if (Array.isArray(posturl)) {
-	            urlArray = posturl;
-	        } else if (typeof posturl === "string" && posturl.trim() !== "") {
-	            // 利用正規表達式分割字串，並過濾掉空值
-	            urlArray = posturl.split(/[,\n\s]+/).filter(url => url.trim() !== "");
-	        }
-	        
-	        // 將連結陣列轉換為 HTML `<a>` 標籤，並以 <br> 換行
-	        const linksHtml = urlArray.length > 0 
-	            ? `
-	                 ${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">文章${i + 1}</a>`).join('\t')}
-	               ` 
-	            : "";
-	
-	        return `
-	            <div class="notice-item">
-	                <div class="faq-q">Q${qNumber}: ${q}</div>
-	                <div class="faq-a">
-						<a>A: ${a}</a>
-						${linksHtml}
-					</div>
-	            </div>
-	        `;
-	    }).join('');
-	
-	    const maxPage = Math.ceil(allFAQs.length / pageSize) || 1;
-	    
-	    // 更新頁碼文字
-	    document.getElementById('pageInfo').innerText = ` / ${maxPage} 頁`;
-	    document.getElementById('prevBtn').disabled = currentPage === 1;
-	    document.getElementById('nextBtn').disabled = end >= allFAQs.length;
-	
-	    // ✨ 更新跳頁選單內容
-	    const pageJump = document.getElementById('pageJump');
-	    let options = "";
-	    for (let i = 1; i <= maxPage; i++) {
-	        options += `<option value="${i}" ${i === currentPage ? 'selected' : ''}>${i}</option>`;
-	    }
-	    pageJump.innerHTML = options;
-	}
-	// 改變每頁顯示筆數
-	window.changePageSize = () => { pageSize = parseInt(document.getElementById('pageSize').value); currentPage = 1; render(); };
-	
-	// 跳至特定頁數
-	window.jumpToPage = () => { currentPage = parseInt(document.getElementById('pageJump').value); render(); window.scrollTo(0, 0); };
-    window.prevPage = () => { if(currentPage > 1) { currentPage--; render(); window.scrollTo(0,0); } };
-    window.nextPage = () => { if(currentPage * pageSize < allFAQs.length) { currentPage++; render(); window.scrollTo(0,0); } };
+        const listContent = document.getElementById('list-content');
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const pagedData = allFAQs.slice(start, end);
+    
+        if (allFAQs.length === 0) {
+            listContent.innerHTML = '<div style="text-align:center; padding: 30px; color:#6b7280;">目前暫無符合條件的常見問題項目。</div>';
+            return;
+        }
+    
+        listContent.innerHTML = pagedData.map((item, index) => {
+            const q = item["標題"];
+            const a = item["貼文內容"] || item["內容"] || "暫無內容";
+            const posturl = item["連結"] || item["貼文連結"] || "";
+            const qNumber = start + index + 1; 
+            
+            let urlArray = [];
+            if (Array.isArray(posturl)) {
+                urlArray = posturl;
+            } else if (typeof posturl === "string" && posturl.trim() !== "") {
+                urlArray = posturl.split(/[,\n\s]+/).filter(url => url.trim() !== "");
+            }
+            
+            // 加上了 class="doc-link" 來美化按鈕外觀
+            const linksHtml = urlArray.length > 0  
+                ? `\n\n參考資料：\n${urlArray.map((url, i) => `<a href="${url}" class="doc-link" target="_blank" rel="noopener noreferrer">文章${i + 1}</a>`).join('\t')}`  
+                : "";
+    
+            return `
+                <div class="notice-item">
+                    <div class="faq-q">Q${qNumber}: ${q}</div>
+                    <div class="faq-a"><span>A: ${a}</span>${linksHtml}</div>
+                </div>
+            `;
+        }).join('');
+    
+        const maxPage = Math.ceil(allFAQs.length / pageSize) || 1;
+        
+        document.getElementById('pageInfo').innerText = ` / ${maxPage} 頁`;
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = end >= allFAQs.length;
+    
+        const pageJump = document.getElementById('pageJump');
+        let options = "";
+        for (let i = 1; i <= maxPage; i++) {
+            options += `<option value="${i}" ${i === currentPage ? 'selected' : ''}>${i}</option>`;
+        }
+        pageJump.innerHTML = options;
+    }
+
+    window.changePageSize = () => { pageSize = parseInt(document.getElementById('pageSize').value); currentPage = 1; render(); };
+    
+    window.jumpToPage = () => { currentPage = parseInt(document.getElementById('pageJump').value); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    window.prevPage = () => { if(currentPage > 1) { currentPage--; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
+    window.nextPage = () => { if(currentPage * pageSize < allFAQs.length) { currentPage++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
 
     window.addEventListener('DOMContentLoaded', init);
 </script>
