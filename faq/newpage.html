@@ -7,7 +7,7 @@
     <!-- 引入思源宋體，保留檔案庫的正式與嚴謹感 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* 基礎樣式重置與設定 - 明亮乾淨風格 */
+        /* 基礎樣式重置與設定 - 明亮乾淨背景 */
         body {
             font-family: 'Noto Serif TC', "PingFang TC", "Microsoft JhengHei", sans-serif;
             background-color: #f8f9fa;
@@ -75,51 +75,57 @@
             transition: border-color 0.3s;
         }
         select:focus {
-            border-color: #5c6bc0;
-            box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.2);
+            border-color: #8b7355;
+            box-shadow: 0 0 0 2px rgba(139, 115, 85, 0.2);
         }
 
-        /* 列表項目 - 簡約卡片 */
+        /* 列表項目 - 牛皮紙質感卡片 */
         .notice-item {
             padding: 20px;
             margin-bottom: 20px;
-            background: #ffffff;
-            border: 1px solid #eeeeee;
-            border-left: 4px solid #5c6bc0; /* 左側點綴色 (紫藍色) */
+            /* 模擬牛皮紙的漸層底色 */
+            background: linear-gradient(135deg, #f7ebd7 0%, #e6d3af 100%);
+            border: 1px solid #dcbfa2;
+            border-left: 5px solid #8b7355; /* 古典褐木色點綴 */
             border-radius: 8px;
-            color: #333333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            color: #3e2723; /* 深棕色文字 */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             transition: box-shadow 0.3s, transform 0.3s;
+            position: relative;
         }
         .notice-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 6px 16px rgba(139, 115, 85, 0.15);
             transform: translateY(-2px);
         }
 
+        /* 問題區塊 */
         .faq-q {
             font-weight: 900;
             font-size: 1.15em;
-            color: #2c3e50;
+            color: #4a2e1b; /* 較深的褐色以凸顯標題 */
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
+        
+        /* 解答區塊 */
         .faq-a {
-            color: #555555;
+            color: #5c4332;
             padding-left: 35px;
+            font-weight: 600;
         }
         .faq-a a {
             display: inline-block;
             margin-top: 10px;
-            color: #5c6bc0;
+            color: #8b3a3a; /* 暗紅色超連結，帶有復古批註感 */
             text-decoration: none;
             font-weight: bold;
             border-bottom: 1px solid transparent;
             transition: border-color 0.3s;
         }
         .faq-a a:hover {
-            border-bottom: 1px solid #5c6bc0;
+            border-bottom: 1px solid #8b3a3a;
         }
 
         /* 分頁區塊 */
@@ -152,9 +158,9 @@
             cursor: not-allowed;
         }
         .page-btn:hover:not(:disabled) {
-            background: #f0f4f8;
-            border-color: #5c6bc0;
-            color: #5c6bc0;
+            background: #faf6f0;
+            border-color: #8b7355;
+            color: #8b7355;
         }
 
         /* 浮動選單按鈕 - 現代簡約風格 */
@@ -210,8 +216,8 @@
             transition: background 0.2s, color 0.2s;
         }
         .menu-item:hover {
-            background: #f0f4f8;
-            color: #5c6bc0;
+            background: #faf6f0;
+            color: #8b7355;
         }
 
         /* 頁首尾 */
@@ -240,13 +246,13 @@
         </div>
         <button class="floating-service-btn" id="serviceBtn" onclick="toggleMenu()">
             <span id="serviceIcon">
-                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#5c6bc0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#8b7355" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
             </span>
-            <span id="serviceText">選單三</span>
+            <span id="serviceText">選單</span>
         </button>
     </div>
     
