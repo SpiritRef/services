@@ -4,29 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>超自然現象彙典</title>
-    <!-- 引入思源宋體以增加古典神秘感 -->
+    <!-- 引入思源宋體，保留檔案庫的正式與嚴謹感 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* 基礎樣式重置與設定 - 黑暗神秘風格 */
+        /* 基礎樣式重置與設定 - 明亮乾淨風格 */
         body {
-            font-family: 'Noto Serif TC', "PMingLiU", serif;
-            background: radial-gradient(circle at center, #2b211e 0%, #0a0807 100%);
-            background-attachment: fixed;
-            color: #d4c4a8; /* 古銅/羊皮紙字體色 */
+            font-family: 'Noto Serif TC', "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background-color: #f8f9fa;
+            color: #333333;
             margin: 0;
             padding: 20px;
             line-height: 1.6;
         }
 
-        /* 列表主容器 - 金屬與暗色系面板 */
+        /* 列表主容器 - 乾淨白底面板 */
         .list-container {
             max-width: 850px;
             margin: 0 auto;
-            background: rgba(25, 20, 18, 0.85);
+            background: #ffffff;
             padding: 40px;
-            border: 2px solid #5c4a3d;
             border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(139, 115, 85, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            border: 1px solid #eaeaea;
             position: relative;
         }
 
@@ -34,24 +33,22 @@
         .back-home {
             display: inline-block;
             margin-bottom: 20px;
-            color: #a68a61;
+            color: #666666;
             text-decoration: none;
             font-weight: bold;
-            transition: color 0.3s, text-shadow 0.3s;
+            transition: color 0.3s;
         }
         .back-home:hover {
-            color: #d4af37;
-            text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+            color: #111111;
         }
         h1 {
             text-align: center;
-            color: #d4af37; /* 經典金色 */
-            font-size: 2.5em;
+            color: #1a1a1a;
+            font-size: 2.2em;
             font-weight: 900;
             margin-top: 0;
-            letter-spacing: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 15px rgba(212, 175, 55, 0.3);
-            border-bottom: 2px solid #5c4a3d;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #f0f0f0;
             padding-bottom: 20px;
         }
 
@@ -62,70 +59,67 @@
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 1px dashed #5c4a3d;
-            color: #a68a61;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555555;
+            font-weight: bold;
         }
         
         select {
-            background: #1a1412;
-            color: #d4c4a8;
-            border: 1px solid #5c4a3d;
-            padding: 5px 10px;
-            border-radius: 4px;
+            background: #ffffff;
+            color: #333333;
+            border: 1px solid #cccccc;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-family: inherit;
             outline: none;
+            transition: border-color 0.3s;
         }
         select:focus {
-            border-color: #d4af37;
-            box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+            border-color: #5c6bc0;
+            box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.2);
         }
 
-        /* 列表項目 - 羊皮紙質感卡片 */
+        /* 列表項目 - 簡約卡片 */
         .notice-item {
             padding: 20px;
             margin-bottom: 20px;
-            /* 模擬老舊紙張的漸層與底色 */
-            background: linear-gradient(135deg, #e3d5b8 0%, #c8b48f 100%);
-            border: 2px solid #3e2723;
-            border-radius: 6px;
-            color: #2b1a10;
-            box-shadow: 3px 4px 10px rgba(0,0,0,0.6), inset 0 0 20px rgba(139, 69, 19, 0.1);
-            position: relative;
+            background: #ffffff;
+            border: 1px solid #eeeeee;
+            border-left: 4px solid #5c6bc0; /* 左側點綴色 (紫藍色) */
+            border-radius: 8px;
+            color: #333333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: box-shadow 0.3s, transform 0.3s;
         }
-        /* 裝飾性內邊框 */
-        .notice-item::before {
-            content: "";
-            position: absolute;
-            top: 4px; left: 4px; right: 4px; bottom: 4px;
-            border: 1px solid rgba(62, 39, 35, 0.3);
-            pointer-events: none;
+        .notice-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
         }
 
         .faq-q {
             font-weight: 900;
-            font-size: 1.25em;
-            color: #4a0e0e; /* 暗紅色標題 */
+            font-size: 1.15em;
+            color: #2c3e50;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         .faq-a {
-            color: #3e2723;
-            font-weight: 600;
+            color: #555555;
             padding-left: 35px;
         }
         .faq-a a {
             display: inline-block;
             margin-top: 10px;
-            color: #7b1fa2; /* 神秘紫/暗紅 */
+            color: #5c6bc0;
             text-decoration: none;
             font-weight: bold;
             border-bottom: 1px solid transparent;
             transition: border-color 0.3s;
         }
         .faq-a a:hover {
-            border-bottom: 1px solid #7b1fa2;
+            border-bottom: 1px solid #5c6bc0;
         }
 
         /* 分頁區塊 */
@@ -136,34 +130,34 @@
             gap: 15px;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px dashed #5c4a3d;
-            color: #a68a61;
+            border-top: 1px solid #f0f0f0;
+            color: #555555;
+            font-weight: bold;
         }
         .page-btn {
             padding: 8px 20px;
-            background: linear-gradient(to bottom, #4a3b32, #2b211e);
-            color: #d4af37;
-            border: 1px solid #7a6352;
-            border-radius: 4px;
+            background: #ffffff;
+            color: #333333;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
             cursor: pointer;
             font-family: inherit;
             font-weight: bold;
             transition: all 0.3s;
         }
         .page-btn:disabled {
-            background: #1a1412;
-            color: #555;
-            border-color: #333;
+            background: #f9f9f9;
+            color: #aaaaaa;
+            border-color: #eeeeee;
             cursor: not-allowed;
-            box-shadow: none;
         }
         .page-btn:hover:not(:disabled) {
-            background: linear-gradient(to bottom, #5c4a3d, #3e2723);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-            border-color: #d4af37;
+            background: #f0f4f8;
+            border-color: #5c6bc0;
+            color: #5c6bc0;
         }
 
-        /* 浮動選單按鈕 - 魔法陣風格 */
+        /* 浮動選單按鈕 - 現代簡約風格 */
         .expandable-menu-container {
             position: fixed;
             bottom: 40px;
@@ -171,25 +165,24 @@
             z-index: 1000;
         }
         .floating-service-btn {
-            background: radial-gradient(circle, #2b211e 0%, #110d0b 100%);
-            color: #d4af37;
-            border: 2px solid #8b7355;
+            background: #ffffff;
+            color: #333333;
+            border: 1px solid #eaeaea;
             border-radius: 50px;
             padding: 12px 25px;
             display: flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8), 0 0 10px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             font-size: 16px;
             font-family: inherit;
             font-weight: bold;
             transition: transform 0.3s, box-shadow 0.3s;
         }
         .floating-service-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.8), 0 0 15px rgba(212, 175, 55, 0.5);
-            border-color: #d4af37;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
         
         /* 展開的選單內容 */
@@ -198,11 +191,11 @@
             position: absolute;
             bottom: 70px;
             right: 0;
-            background: rgba(20, 15, 12, 0.95);
-            border: 1px solid #8b7355;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
-            padding: 15px 0;
+            background: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            padding: 10px 0;
             min-width: 180px;
         }
         .menu-content.active {
@@ -210,21 +203,22 @@
             animation: fadeIn 0.3s ease;
         }
         .menu-item {
-            padding: 10px 20px;
-            color: #d4c4a8;
+            padding: 12px 20px;
+            color: #555555;
             cursor: pointer;
+            font-weight: bold;
             transition: background 0.2s, color 0.2s;
         }
         .menu-item:hover {
-            background: rgba(212, 175, 55, 0.1);
-            color: #d4af37;
+            background: #f0f4f8;
+            color: #5c6bc0;
         }
 
         /* 頁首尾 */
         footer {
             text-align: center;
             margin-top: 50px;
-            color: #5c4a3d;
+            color: #999999;
             font-size: 0.9em;
             letter-spacing: 1px;
         }
@@ -241,15 +235,15 @@
     <div class="expandable-menu-container" id="menuContainer">
         <div class="menu-content" id="menuContent">
             <div class="menu-item">🔮 最新目擊情報</div>
-            <div class="menu-item">📜 靈異檔案歸檔</div>
-            <div class="menu-item">👁️ 聯絡調查局</div>
+            <div class="menu-item">📂 靈異檔案歸檔</div>
+            <div class="menu-item">📞 聯絡調查局</div>
         </div>
         <button class="floating-service-btn" id="serviceBtn" onclick="toggleMenu()">
             <span id="serviceIcon">
-                <!-- 修改為具備神秘感的芒星/幾何圖案 -->
-                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#5c6bc0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
                 </svg>
             </span>
             <span id="serviceText">選單三</span>
@@ -294,15 +288,15 @@
 
     <!-- JavaScript 邏輯 -->
     <script>
-        // 1. 產生更具超自然氛圍的模擬資料庫
-        const icons = ["🔮", "🎴", "👁️", "🕯️", "🌘"];
+        // 1. 產生模擬資料庫
+        const icons = ["🔮", "📁", "👁️", "📝", "🔍"];
         const mockData = Array.from({ length: 32 }, (_, i) => {
             const icon = icons[i % icons.length];
             return {
                 id: i + 1,
                 q: `${icon} Q${i + 1}：午夜長廊的低語聲來源？`,
-                a: `關於現象 ${i + 1} 的調查結果：經過靈能探測器掃描，發現異常的磁場波動。這份報告已由第三調查小組封存。`,
-                linksHtml: `<a href="#" target="_blank" rel="noopener noreferrer">查看機密文件 ${i + 1} 🔏</a>`
+                a: `關於現象 ${i + 1} 的調查結果：經過儀器檢測與現場勘驗，已將相關數值記錄在案。該檔案目前處於歸檔狀態。`,
+                linksHtml: `<a href="#" target="_blank" rel="noopener noreferrer">查看調查文件 ${i + 1} &#x2197;</a>`
             };
         });
 
@@ -324,7 +318,7 @@
             if (currentPage < 1) currentPage = 1;
 
             totalCount.innerText = `共 ${totalItems} 筆`;
-            pageInfo.innerText = `第 ${currentPage} 頁`;
+            pageInfo.innerText = `第 ${currentPage} / ${totalPages} 頁`;
 
             // 更新下拉跳頁選單
             pageJump.innerHTML = '';
