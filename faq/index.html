@@ -27,18 +27,19 @@
     <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 
     <style>
-        body { font-family: "Noto Serif TC", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", serif; background: #f5f4f0; padding: 20px; color: #333; line-height: 1.8; }
-        .list-container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h1 { border-bottom: 2px solid #c0392b; padding-bottom: 10px; font-size: 1.5rem; color: #333; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: #f8f9fa; padding: 20px; color: #333; line-height: 1.8; }
+        .list-container { max-width: 850px; margin: auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; }
+        h1 { text-align: center; color: #1a1a1a; font-size: 2.2em; font-weight: 900; margin-top: 0; letter-spacing: 2px; border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; }
         
-        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f9f9f9; padding: 10px; border-radius: 5px; font-size: 0.9rem; }
+        .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; color: #555555; font-weight: bold; }
 
-        /* 樣式對齊首頁 Q&A 紅黑風格 */
-        .notice-item { display: block; margin-bottom: 25px; border-bottom: 1px dotted #eee; padding-bottom: 15px; }
-        .notice-item:last-child { border-bottom: none; }
+        /* 牛皮紙質感卡片 */
+        .notice-item { padding: 20px; margin-bottom: 20px; background: linear-gradient(135deg, #f7ebd7 0%, #e6d3af 100%); border: 1px solid #dcbfa2; border-left: 5px solid #8b7355; border-radius: 8px; color: #3e2723; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; }
+        .notice-item:hover { box-shadow: 0 6px 16px rgba(139, 115, 85, 0.15); transform: translateY(-2px); }
+        .notice-item:last-child { margin-bottom: 0; }
 
-        .faq-q { font-weight: bold; color: #c0392b; margin-bottom: 8px; font-size: 1.4rem; }
-        .faq-a { margin-left: 15px; font-size: 1.2rem; line-height: 1.2; color: #444; white-space: pre-wrap; }
+        .faq-q { font-weight: 900; font-size: 1.15em; color: #4a2e1b; margin-bottom: 10px; }
+        .faq-a { color: #5c4332; padding-left: 35px; font-weight: 600; white-space: pre-wrap; }
 		.faq-links { margin-top: 15px; padding-top: 15px;border-top: 1px dashed #2a2a2d;font-size: 0.9rem;color: #88888d;display: flex;flex-wrap: wrap;align-items: center;gap: 8px;}
 		.faq-links a { display: inline-flex; 
 			align-items: center;
@@ -68,14 +69,17 @@
 		.faq-links a:hover { background: #000000; color: #ffc107; transform: scale(1.05); }
         .date-label { display: block; color: #999; font-size: 0.8rem; margin-bottom: 5px; }
 
-        .pagination { margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; }
-        .page-btn { padding: 6px 14px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 4px; }
-        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination { margin-top: 40px; padding-top: 20px; border-top: 1px solid #f0f0f0; display: flex; gap: 15px; justify-content: center; align-items: center; color: #555555; font-weight: bold; }
+        .page-btn { padding: 8px 20px; background: #ffffff; color: #333333; border: 1px solid #cccccc; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: bold; transition: all 0.3s; }
+        .page-btn:disabled { background: #f9f9f9; color: #aaaaaa; border-color: #eeeeee; cursor: not-allowed; }
+        .page-btn:hover:not(:disabled) { background: #faf6f0; border-color: #8b7355; color: #8b7355; }
+        .jump-select { background: #ffffff; color: #333333; border: 1px solid #cccccc; padding: 6px 12px; border-radius: 6px; font-family: inherit; outline: none; transition: border-color 0.3s; }
+        .jump-select:focus { border-color: #8b7355; box-shadow: 0 0 0 2px rgba(139, 115, 85, 0.2); }
 
         @media (max-width: 600px) {
             body { padding: 10px; }
             .list-container { padding: 15px; }
-            .faq-a { margin-left: 5px; }
+            .faq-a { padding-left: 15px; }
         }
     </style>
 </head>
