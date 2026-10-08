@@ -169,7 +169,8 @@
 				finalPath = JSON_PATH.startsWith('../') ? JSON_PATH : '../' + JSON_PATH;
 			}
 
-			const res = await fetch(finalPath);
+			const sep = finalPath.includes('?') ? '&' : '?';
+			const res = await fetch(`${finalPath}${sep}t=${Date.now()}`, { cache: 'no-store' });
 			if (res.ok) {
 				const data = await res.json();
 				// 過濾與排序
@@ -187,19 +188,28 @@
 
 	async function fetchRemoteData(cache) {
 		try {
-			const res = await fetch(`${API_BASE}${API_BASE.includes('?') ? '&' : '?'}type=notice`);
+			const sep = API_BASE.includes('?') ? '&' : '?';
+			const res = await fetch(`${API_BASE}${sep}type=notice&t=${Date.now()}`, { cache: 'no-store' });
+			if (!res.ok) {
+				console.warn(`公告 API 同步失敗: HTTP ${res.status}，顯示本機快取。請檢查 GAS 是否已重新部署。`);
+				return;
+			}
 			const data = await res.json();
 			const filtered = data.filter(i => String(i["標題"]).includes("公告"))
 								 .sort((a,b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
 
-			if (JSON.stringify(filtered) !== cache) {
+			if (JSON.stringify(filtered) !== localStorage.getItem('cache_notices')) {
 				allNotices = filtered;
 				updateUI();
-				setTimeout(() => {
+				try {
 					localStorage.setItem('cache_notices', JSON.stringify(filtered));
-				}, 100);
+				} catch (e) {
+					console.warn("公告快取寫入失敗:", e);
+				}
+			} else {
+				console.log("✅ 公告已是最新");
 			}
-		} catch(e) { console.error("API 同步失敗", e); }
+		} catch(e) { console.error("API 同步失敗（顯示本機快取）", e); }
 	}
 
 	function updateUI() {

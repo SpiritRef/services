@@ -98,7 +98,8 @@ function processServiceData(data) {
  */
 async function loadStaticData(path, type) {
     try {
-        const res = await fetch(path);
+        const sep = path.includes('?') ? '&' : '?';
+        const res = await fetch(`${path}${sep}t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) return;
         const data = await res.json();
         
@@ -122,8 +123,12 @@ async function fetchRemoteData() {
     // 1. 同步服務與 FAQ
     const syncServices = async () => {
         try {
-            const res = await fetch(`${SERVICE_API_URL}${SERVICE_API_URL.includes('?') ? '&' : '?'}type=service`);
-            if (!res.ok) return;
+            const sep = SERVICE_API_URL.includes('?') ? '&' : '?';
+            const res = await fetch(`${SERVICE_API_URL}${sep}type=service&t=${Date.now()}`, { cache: 'no-store' });
+            if (!res.ok) {
+                console.warn(`服務 API 同步失敗: HTTP ${res.status}`);
+                return;
+            }
             const data = await res.json();
             
             if (JSON.stringify(data) !== localStorage.getItem('cache_services')) {
@@ -136,11 +141,15 @@ async function fetchRemoteData() {
         }
     };
 
-    // 2. 同步公告
+    // 2. 同步公告（走 NOVEL_API，若 GAS 未重部署會失敗並保留快取）
     const syncNotices = async () => {
         try {
-            const res = await fetch(`${NOVEL_API_URL}${NOVEL_API_URL.includes('?') ? '&' : '?'}type=notice`);
-            if (!res.ok) return;
+            const sep = NOVEL_API_URL.includes('?') ? '&' : '?';
+            const res = await fetch(`${NOVEL_API_URL}${sep}type=notice&t=${Date.now()}`, { cache: 'no-store' });
+            if (!res.ok) {
+                console.warn(`公告 API 同步失敗: HTTP ${res.status}，顯示本機快取。請檢查 GAS 是否已重新部署。`);
+                return;
+            }
             const data = await res.json();
 
             let newData = data.filter(item => String(item["標題"] || "").includes("公告"));
