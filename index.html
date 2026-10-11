@@ -18,13 +18,14 @@
     <!-- 3. CSS 連結 (保持原樣) -->
 	<link rel="stylesheet" href="https://spiritref.github.io/CSS/global.css">
     <link rel="stylesheet" href="CSS/Services.css">
+    <link rel="stylesheet" href="CSS/cloud.css">
     <style>
         /* 牛皮紙質感古典風格 */
         body { background: #f8f9fa; }
         .container { max-width: 1050px; }
         
         /* 卡片樣式 */
-        .card { background: linear-gradient(135deg, #f7ebd7 0%, #e6d3af 100%); border: 1px solid #dcbfa2; border-left: 5px solid #8b7355; color: #3e2723; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; }
+        .card { background: linear-gradient(135deg, rgba(247,235,215,0.68) 0%, rgba(230,211,175,0.68) 100%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid #dcbfa2; border-left: 5px solid #8b7355; color: #3e2723; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; }
         .card:hover { box-shadow: 0 6px 16px rgba(139, 115, 85, 0.15); transform: translateY(-2px); }
         .card h3 { color: #4a2e1b; border-bottom: 2px solid #8b7355; }
         .card p { color: #5c4332; }
@@ -48,7 +49,8 @@
     <meta name="twitter:description" content="靈異紀實與專業靈學服務">
     <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 </head>
-<body>
+<body class="cloud-bg">
+<div id="cloud-container"></div>
 
 <header>
 	<div class="logo">
@@ -180,6 +182,7 @@
 	<p>&copy; 2026 鬼磕頭. All Rights Reserved.</p>
 </footer>
 <script type="module" src="Javascript/Services.js"></script>
+<script src="Javascript/cloud.js"></script>
 <script type="module" src="https://spiritref.github.io/Javascript/global.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PSE2H8VSBQ"></script>

@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="https://spiritref.github.io/CSS/global.css">
     <link rel="stylesheet" href="../CSS/Services.css">
+    <link rel="stylesheet" href="../CSS/cloud.css">
 
     <meta property="og:title" content="超自然現象彙典 | 鬼磕頭">
     <meta property="og:description" content="針對靈學服務、驅鬼儀式及常見疑問的專業解答。">
@@ -28,13 +29,13 @@
 
     <style>
         body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: #f8f9fa; padding: 20px; color: #333; line-height: 1.8; }
-        .list-container { max-width: 850px; margin: auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; }
+        .list-container { max-width: 850px; margin: auto; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; }
         h1 { text-align: center; color: #1a1a1a; font-size: 2.2em; font-weight: 900; margin-top: 0; letter-spacing: 2px; border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; }
         
         .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; color: #555555; font-weight: bold; }
 
         /* 牛皮紙質感卡片 - 高度自適應 */
-        .notice-item { padding: 15px 20px; margin-bottom: 15px; background: linear-gradient(135deg, #f7ebd7 0%, #e6d3af 100%); border: 1px solid #dcbfa2; border-left: 5px solid #8b7355; border-radius: 8px; color: #3e2723; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; height: auto; min-height: 0; }
+        .notice-item { padding: 15px 20px; margin-bottom: 15px; background: linear-gradient(135deg, rgba(247,235,215,0.68) 0%, rgba(230,211,175,0.68) 100%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid #dcbfa2; border-left: 5px solid #8b7355; border-radius: 8px; color: #3e2723; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; height: auto; min-height: 0; }
         .notice-item:hover { box-shadow: 0 6px 16px rgba(139, 115, 85, 0.15); transform: translateY(-2px); }
         .notice-item:last-child { margin-bottom: 0; }
 
@@ -83,7 +84,8 @@
         }
     </style>
 </head>
-<body>
+<body class="cloud-bg">
+<div id="cloud-container"></div>
 
 <div class="expandable-menu-container" id="menuContainer">
     <div class="menu-content" id="menuContent"></div>
@@ -139,57 +141,64 @@
     let allFAQs = [];
     let currentPage = 1;
     let pageSize = 10;
-    let SERVICE_API_URL = "";
+    let jsonServicePath = "";
     const iniPath = '/settings/global.ini';
 
     async function init() {
         // 1. 優先載入快取 (與 Services.js 邏輯同步)
         const cached = localStorage.getItem('cache_services');
         if (cached) {
-            processData(JSON.parse(cached));
+            try { processData(JSON.parse(cached)); } catch (e) {}
         }
 
         try {
             const config = await Global.getIni(iniPath);
             if (config) {
                 if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
-                
+                jsonServicePath = config.JsonService || "";
+
                 // 2. 靜態補位 (若快取無資料，則讀取靜態 JSON)
-                if (allFAQs.length === 0 && config.JsonService) {
-                    await fetchStaticJson(config.JsonService);
+                if (allFAQs.length === 0 && jsonServicePath) {
+                    await fetchStaticJson(jsonServicePath);
                 }
 
-                // 3. 遠端同步 (取得加密或明碼 API)
-                if (config.SERVICE_API_URL) {
-                    SERVICE_API_URL = config.SERVICE_API_URL.startsWith("http") ? config.SERVICE_API_URL : atob(config.SERVICE_API_URL);
-                    fetchRemoteData();
-                }
+                // 3. 版本比對，有更新才重抓
+                refreshFromVersion();
             }
         } catch (e) { console.error("初始化失敗", e); }
     }
 
     async function fetchStaticJson(path) {
         try {
-            const res = await fetch(path);
+            const sep = path.includes('?') ? '&' : '?';
+            const res = await fetch(`${path}${sep}t=${Date.now()}`, { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
                 processData(data);
+                return true;
             }
         } catch (e) { console.warn("靜態讀取失敗:", e); }
+        return false;
     }
 
-    async function fetchRemoteData() {
+    async function refreshFromVersion() {
+        let remoteVer = null;
+        try { remoteVer = await Global.getRemoteVersion(); } catch (e) {}
+        if (!remoteVer) return;
         try {
-            const res = await fetch(`${SERVICE_API_URL}${SERVICE_API_URL.includes('?') ? '&' : '?'}type=service`);
-            if (!res.ok) return;
-            const data = await res.json();
-            
-            // 若資料有更新，存入快取並重新渲染
-            if (JSON.stringify(data) !== localStorage.getItem('cache_services')) {
-                localStorage.setItem('cache_services', JSON.stringify(data));
-                processData(data);
-            }
-        } catch (e) { console.error("API 同步失敗:", e); }
+            if (localStorage.getItem('data_ver') === remoteVer && allFAQs.length > 0) return;
+        } catch (e) {}
+        if (!jsonServicePath) return;
+        try {
+            const sep = jsonServicePath.includes('?') ? '&' : '?';
+            const r = await fetch(`${jsonServicePath}${sep}t=${Date.now()}`, { cache: 'no-store' });
+            if (!r.ok) return;
+            const data = await r.json();
+            processData(data);
+            localStorage.setItem('cache_services', JSON.stringify(data));
+            localStorage.setItem('data_ver', remoteVer);
+            console.log("✅ 已更新到最新版本");
+        } catch (e) { console.warn("更新失敗:", e); }
     }
 
     function processData(data) {
@@ -277,6 +286,7 @@
 </script>
 
 <script type="module" src="/Javascript/global.js"></script>
+<script src="../Javascript/cloud.js"></script>
 
 </body>
 </html>

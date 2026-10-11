@@ -18,7 +18,9 @@ html {
     scroll-padding-top: var(--header-h, 80px); /* 這裡的數值請根據您 header 的實際高度調整 */
 }
 header { 
-	background: #fff; 
+	background: rgba(255, 255, 255, 0.85);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
 	border-bottom: 1px solid #eee; 
 	padding: 1rem 5%; 
 	display: flex; 
@@ -35,7 +37,7 @@ nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font
 nav a:hover { color: var(--accent-color); }
 
 /* --- 公告區樣式優化 --- */
-.notice-board { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 20px; margin-bottom: 40px; }
+.notice-board { background: rgba(249, 249, 249, 0.66); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-left: 4px solid var(--accent-color); padding: 20px; margin-bottom: 40px; }
 .notice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .notice-header h2 { margin: 0; font-size: 1.2rem; }
 #contact h2 {

@@ -26,9 +26,10 @@
     <meta name="twitter:description" content="查看鬼磕頭日誌的最新公告、服務更新與靈異紀實紀錄。">
     <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 	<link rel="stylesheet" href="https://spiritref.github.io/CSS/global.css">
+	<link rel="stylesheet" href="../CSS/cloud.css">
 	<style>
 		body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: #f8f9fa; padding: 20px; color: #333; line-height: 1.6; }
-		.list-container { max-width: 850px; margin: auto; background: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; }
+		.list-container { max-width: 850px; margin: auto; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; }
 		h1 { text-align: center; color: #1a1a1a; font-size: 2.2em; font-weight: 900; margin-top: 0; letter-spacing: 2px; border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; }
 		
 		.controls { 
@@ -45,7 +46,7 @@
 		}
 		
 		/* 牛皮紙質感卡片 */
-		.item { padding: 20px; margin-bottom: 20px; background: linear-gradient(135deg, #f7ebd7 0%, #e6d3af 100%); border: 1px solid #dcbfa2; border-left: 5px solid #8b7355; border-radius: 8px; color: #3e2723; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; white-space: pre-line; word-wrap: break-word; }
+		.item { padding: 20px; margin-bottom: 20px; background: linear-gradient(135deg, rgba(247,235,215,0.68) 0%, rgba(230,211,175,0.68) 100%); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid #dcbfa2; border-left: 5px solid #8b7355; border-radius: 8px; color: #3e2723; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s, transform 0.3s; white-space: pre-line; word-wrap: break-word; }
 		.item:hover { box-shadow: 0 6px 16px rgba(139, 115, 85, 0.15); transform: translateY(-2px); }
 		.item:last-child { margin-bottom: 0; }
 		.date { color: #4a2e1b; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; }
@@ -66,7 +67,8 @@
 		}
 	</style>
 </head>
-<body>
+<body class="cloud-bg">
+<div id="cloud-container"></div>
 	
 <div class="expandable-menu-container" id="menuContainer">
 	<div class="menu-content" id="menuContent"></div>
@@ -120,7 +122,6 @@
 <script type="module">
 	import * as Global from '/Javascript/global.js';
 
-	let API_BASE = "";
 	let JSON_PATH = ""; // 💡 儲存 INI 裡的靜態 JSON 路徑
 	let allNotices = [];
 	let currentPage = 1;
@@ -131,27 +132,26 @@
 		// 1. 優先讀取快取
 		const cache = localStorage.getItem('cache_notices');
 		if (cache) {
-			allNotices = JSON.parse(cache);
-			updateUI();
+			try {
+				allNotices = JSON.parse(cache);
+				updateUI();
+			} catch (e) { allNotices = []; }
 		}
 
 		try {
 			const config = await Global.getIni(iniPath);
 			if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
 			if (config) {
-				// 💡 讀取 JSON 備份路徑 (例如: ../Data/Notices.json)
-				JSON_PATH = config.JsonNotice || config.JsonData; 
-				
+				// 💡 靜態 JSON（資料庫 = GitHub）
+				JSON_PATH = config.JsonNotice || config.JsonData;
+
 				// 💡 如果快取沒資料，立刻先抓靜態 JSON
 				if (allNotices.length === 0 && JSON_PATH) {
 					await fetchStaticJson();
 				}
 
-				// 2. 解析 API 網址並啟動背景同步
-				if (config.NOVEL_API_URL) {
-					API_BASE = config.NOVEL_API_URL.startsWith("http") ? config.NOVEL_API_URL : atob(config.NOVEL_API_URL);
-					fetchRemoteData(cache); 
-				}
+				// 2. 版本比對，有更新才重抓
+				refreshFromVersion();
 			}
 		} catch (e) {
 			console.error("初始化失敗", e);
@@ -186,30 +186,22 @@
 		}
 	}
 
-	async function fetchRemoteData(cache) {
+	async function refreshFromVersion() {
+		let remoteVer = null;
 		try {
-			const sep = API_BASE.includes('?') ? '&' : '?';
-			const res = await fetch(`${API_BASE}${sep}type=notice&t=${Date.now()}`, { cache: 'no-store' });
-			if (!res.ok) {
-				console.warn(`公告 API 同步失敗: HTTP ${res.status}，顯示本機快取。請檢查 GAS 是否已重新部署。`);
-				return;
-			}
-			const data = await res.json();
-			const filtered = data.filter(i => String(i["標題"]).includes("公告"))
-								 .sort((a,b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
-
-			if (JSON.stringify(filtered) !== localStorage.getItem('cache_notices')) {
-				allNotices = filtered;
-				updateUI();
-				try {
-					localStorage.setItem('cache_notices', JSON.stringify(filtered));
-				} catch (e) {
-					console.warn("公告快取寫入失敗:", e);
-				}
-			} else {
-				console.log("✅ 公告已是最新");
-			}
-		} catch(e) { console.error("API 同步失敗（顯示本機快取）", e); }
+			remoteVer = await Global.getRemoteVersion();
+		} catch (e) {}
+		if (!remoteVer) return;
+		try {
+			if (localStorage.getItem('data_ver') === remoteVer && allNotices.length > 0) return;
+		} catch (e) {}
+		if (!JSON_PATH) return;
+		await fetchStaticJson();
+		try {
+			localStorage.setItem('cache_notices', JSON.stringify(allNotices));
+			localStorage.setItem('data_ver', remoteVer);
+			console.log("✅ 公告已更新到最新版本");
+		} catch (e) {}
 	}
 
 	function updateUI() {
@@ -272,5 +264,6 @@
 	window.addEventListener('DOMContentLoaded', init);
 </script>
 <script type="module" src="/Javascript/global.js"></script>
+<script src="../Javascript/cloud.js"></script>
 </body>
 </html>

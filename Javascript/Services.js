@@ -1,10 +1,8 @@
 import * as Global from '/Javascript/global.js';
 
-let NOVEL_API_URL = "";    
-let SERVICE_API_URL = "";  
-let JsonDataPath = "";     
+let JsonDataPath = "";
 let JsonServicePath = "";
-const iniPath = '/settings/global.ini'; 
+const iniPath = '/settings/global.ini';
 
 let allNotices = [];
 let allServices = [];
@@ -12,13 +10,13 @@ let allVisualRecords = [];
 let allFAQs = [];
 
 /**
- * 初始化應用程式
+ * 初始化應用程式（資料庫 = GitHub 靜態 JSON）
  */
 async function initApp() {
     // 💡 第一階段：立即載入快取
     loadCache();
     Global.initGlobalHeader();
-    
+
     try {
         const config = await Global.getIni(iniPath);
         if (config.MENU_DATA) Global.initMenu(config.MENU_DATA);
@@ -36,15 +34,10 @@ async function initApp() {
             }
             if (loadTasks.length > 0) await Promise.all(loadTasks);
 
-            // 💡 第三階段：解析 API 並執行背景同步
-            if (config.NOVEL_API_URL && config.SERVICE_API_URL) {
-                NOVEL_API_URL = config.NOVEL_API_URL.startsWith("http") ? config.NOVEL_API_URL : atob(config.NOVEL_API_URL);
-                SERVICE_API_URL = config.SERVICE_API_URL.startsWith("http") ? config.SERVICE_API_URL : atob(config.SERVICE_API_URL);
-                console.log("✅ 系統設定載入成功，啟動遠端同步...");
-                fetchRemoteData();
-            }
+            // 💡 第三階段：版本比對，有更新才重抓
+            refreshFromVersion();
         } else {
-            throw new Error("INI 設定檔缺少關鍵 API 網址");
+            throw new Error("INI 設定檔載入失敗");
         }
     } catch (e) {
         console.error("❌ 初始化失敗:", e);
@@ -117,58 +110,30 @@ async function loadStaticData(path, type) {
 }
 
 /**
- * 執行背景同步 (獨立執行緒，互不等待)
+ * 版本比對更新：版本沒變就不動作，變了才重抓兩個靜態 JSON
  */
-async function fetchRemoteData() {
-    // 1. 同步服務與 FAQ
-    const syncServices = async () => {
-        try {
-            const sep = SERVICE_API_URL.includes('?') ? '&' : '?';
-            const res = await fetch(`${SERVICE_API_URL}${sep}type=service&t=${Date.now()}`, { cache: 'no-store' });
-            if (!res.ok) {
-                console.warn(`服務 API 同步失敗: HTTP ${res.status}`);
-                return;
-            }
-            const data = await res.json();
-            
-            if (JSON.stringify(data) !== localStorage.getItem('cache_services')) {
-                localStorage.setItem('cache_services', JSON.stringify(data));
-                processServiceData(data); // 誰快誰先顯示
-                console.log("🔄 服務類 API 同步完成");
-            }
-        } catch (e) {
-            console.error("服務同步失敗:", e);
-        }
-    };
-
-    // 2. 同步公告（走 NOVEL_API，若 GAS 未重部署會失敗並保留快取）
-    const syncNotices = async () => {
-        try {
-            const sep = NOVEL_API_URL.includes('?') ? '&' : '?';
-            const res = await fetch(`${NOVEL_API_URL}${sep}type=notice&t=${Date.now()}`, { cache: 'no-store' });
-            if (!res.ok) {
-                console.warn(`公告 API 同步失敗: HTTP ${res.status}，顯示本機快取。請檢查 GAS 是否已重新部署。`);
-                return;
-            }
-            const data = await res.json();
-
-            let newData = data.filter(item => String(item["標題"] || "").includes("公告"));
-            newData.sort((a, b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
-
-            if (JSON.stringify(newData) !== localStorage.getItem('cache_notices')) {
-                allNotices = newData;
-                localStorage.setItem('cache_notices', JSON.stringify(newData));
-                renderNotices(); // 公告跑完立即顯示
-                console.log("🔄 公告區 API 同步完成");
-            }
-        } catch (e) {
-            console.error("公告同步失敗:", e);
-        }
-    };
-
-    // 🚀 三路並行發射
-    syncServices();
-    syncNotices();
+async function refreshFromVersion() {
+    let remoteVer = null;
+    try {
+        remoteVer = await Global.getRemoteVersion();
+    } catch (e) {}
+    if (!remoteVer) return;
+    try {
+        const hasData = allNotices.length > 0 || allServices.length > 0;
+        if (localStorage.getItem('data_ver') === remoteVer && hasData) return;
+    } catch (e) {}
+    const tasks = [];
+    if (JsonDataPath) tasks.push(loadStaticData(JsonDataPath, 'notice'));
+    if (JsonServicePath) tasks.push(loadStaticData(JsonServicePath, 'service'));
+    await Promise.all(tasks);
+    try {
+        localStorage.setItem('cache_notices', JSON.stringify(allNotices));
+        localStorage.setItem('cache_services', JSON.stringify(allServices));
+        localStorage.setItem('data_ver', remoteVer);
+        console.log("✅ 已更新到最新版本");
+    } catch (e) {
+        console.warn("快取寫入失敗:", e);
+    }
 }
 
 /**
