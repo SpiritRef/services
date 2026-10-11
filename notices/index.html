@@ -232,9 +232,10 @@
 
 		document.getElementById('list-content').innerHTML = pagedData.map(i => {
 			const dateStr = i["發佈日期"] ? new Date(i["發佈日期"]).toLocaleDateString() : "近期";
+			const pin = i["置頂"] === true ? "📌" : "";
 			return `
 				<div class="item">
-					<div class="date">[${dateStr}]</div>
+					<div class="date">${pin}[${dateStr}]</div>
 					<div class="content">${i["貼文內容"] || i["內容"]}</div>
 				</div>
 			`;

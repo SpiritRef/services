@@ -154,9 +154,10 @@ function renderNotices() {
         const text = item["貼文內容"] || item["內容"] || "";
         const summary = text.length > 50 ? text.substring(0, 50) + "..." : text;
         const date = item["發佈日期"] ? new Date(item["發佈日期"]).toLocaleDateString() : "近期";
+        const pin = item["置頂"] === true ? "📌" : "";
         return `
             <div class="notice-item">
-                <span class="notice-date">[${date}]</span>
+                <span class="notice-date">${pin}[${date}]</span>
                 <span class="notice-text">${summary}</span>
             </div>
         `;
