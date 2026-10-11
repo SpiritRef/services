@@ -36,8 +36,7 @@
 | :--- | :--- |
 | `index.html` | **服務入口頁**。整合個人簡介、最新公告、專業服務與聯絡方式。 |
 | `CSS/Services.css` | 網站視覺風格定義，營造獨特且專業的氛圍。 |
-| `Javascript/Services.js` | 核心邏輯。負責向後端 API 獲取最新的服務清單與公告內容。 |
-| `Javascript/API.js` | 核心模組，處理 INI 解析與 API 通訊。 |
+| `Javascript/Services.js` | 核心邏輯。負責向後端 API 獲取最新的服務清單與公告內容（共用 root `global.js` 的 `getIni`）。 |
 | `notices/index.html` | 公告存檔頁面，完整紀錄所有歷史訊息。 |
 | `faq/index.html` | 超自然現象彙典頁面，提供常見問題解答。 |
 | `../ghoststory/` | 關聯專案。儲存豐富的文字創作，為本站提供強大的內容權重 (Backlink)。 |
