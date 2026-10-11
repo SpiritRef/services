@@ -1,4 +1,4 @@
-import * as Global from '/Javascript/global.js';
+import * as Global from '/Javascript/global.js?v=20261011';
 
 let JsonDataPath = "";
 let JsonServicePath = "";
@@ -146,7 +146,10 @@ function renderNotices() {
         content.innerText = "目前暫無公告。";
         return;
     }
-    const displayList = allNotices.slice(0, 5);
+    // 置頂優先，再按日期倒序
+    const sorted = [...allNotices].sort((a, b) =>
+        ((b["置頂"] === true) - (a["置頂"] === true)) || (new Date(b["發佈日期"]) - new Date(a["發佈日期"])));
+    const displayList = sorted.slice(0, 5);
     content.innerHTML = displayList.map(item => {
         const text = item["貼文內容"] || item["內容"] || "";
         const summary = text.length > 50 ? text.substring(0, 50) + "..." : text;
@@ -213,6 +216,8 @@ function renderFAQ() {
 function renderServices(data) {
     const container = document.getElementById('services-container');
     if (!container) return;
+    // 四個以下一列兩個，五個以上一列三個
+    container.dataset.cols = data.length >= 5 ? '3' : '2';
     if (data.length === 0) {
         container.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">服務項目整理中。</p>';
         return;

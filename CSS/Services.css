@@ -37,7 +37,7 @@ nav a { margin-left: 20px; text-decoration: none; color: var(--text-color); font
 nav a:hover { color: var(--accent-color); }
 
 /* --- 公告區樣式優化 --- */
-.notice-board { background: rgba(249, 249, 249, 0.66); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-left: 4px solid var(--accent-color); padding: 20px; margin-bottom: 40px; }
+.notice-board { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 20px; margin-bottom: 40px; }
 .notice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .notice-header h2 { margin: 0; font-size: 1.2rem; }
 #contact h2 {
@@ -94,6 +94,12 @@ nav a:hover { color: var(--accent-color); }
 }
 /* 服務項目卡片 */
 .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
+/* 專業服務項目：四個以下一列兩個，五個以上一列三個（由 JS 依筆數掛 data-cols） */
+#services-container[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
+#services-container[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 700px) {
+    #services-container[data-cols] { grid-template-columns: 1fr; }
+}
 .card { border: 1px solid #eee; padding: 25px; border-radius: 12px; transition: 0.3s; background: #fff; }
 .card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.08); transform: translateY(-5px); }
 .card h3 { color: var(--primary-color); border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 5px; margin-top: 0; margin-bottom: 15px; }

@@ -26,10 +26,14 @@
     <meta name="twitter:description" content="查看鬼磕頭日誌的最新公告、服務更新與靈異紀實紀錄。">
     <meta name="twitter:image" content="https://spiritref.github.io/GhostKowtow.jpg">
 	<link rel="stylesheet" href="https://spiritref.github.io/CSS/global.css">
-	<link rel="stylesheet" href="../CSS/cloud.css">
+	<link rel="stylesheet" href="../CSS/cloud.css?v=20261011">
 	<style>
 		body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: #f8f9fa; padding: 20px; color: #333; line-height: 1.6; }
-		.list-container { max-width: 850px; margin: auto; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; }
+		.list-container { max-width: 850px; margin: auto; background: rgba(102, 95, 85, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; color: #f3ede4; }
+		.list-container h1 { color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.25); }
+		.list-container .controls { color: #e8e0d2; border-bottom-color: rgba(255, 255, 255, 0.2); }
+		.list-container .pagination { color: #e8e0d2; border-top-color: rgba(255, 255, 255, 0.2); }
+		.list-container a:not(.page-btn):not(.btn) { color: #ffd98a; }
 		h1 { text-align: center; color: #1a1a1a; font-size: 2.2em; font-weight: 900; margin-top: 0; letter-spacing: 2px; border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; }
 		
 		.controls { 
@@ -120,7 +124,7 @@
 </footer>
 	
 <script type="module">
-	import * as Global from '/Javascript/global.js';
+	import * as Global from '/Javascript/global.js?v=20261011';
 
 	let JSON_PATH = ""; // 💡 儲存 INI 裡的靜態 JSON 路徑
 	let allNotices = [];
@@ -173,9 +177,9 @@
 			const res = await fetch(`${finalPath}${sep}t=${Date.now()}`, { cache: 'no-store' });
 			if (res.ok) {
 				const data = await res.json();
-				// 過濾與排序
+				// 過濾與排序（置頂優先，再按日期倒序）
 				const filtered = data.filter(i => String(i["標題"] || "").includes("公告"))
-									 .sort((a,b) => new Date(b["發佈日期"]) - new Date(a["發佈日期"]));
+									 .sort((a, b) => ((b["置頂"] === true) - (a["置頂"] === true)) || (new Date(b["發佈日期"]) - new Date(a["發佈日期"])));
 				
 				allNotices = filtered;
 				console.log("📄 已載入靜態 JSON 公告備份");
@@ -263,7 +267,7 @@
 
 	window.addEventListener('DOMContentLoaded', init);
 </script>
-<script type="module" src="/Javascript/global.js"></script>
-<script src="../Javascript/cloud.js"></script>
+<script type="module" src="/Javascript/global.js?v=20261011"></script>
+<script src="../Javascript/cloud.js?v=20261012"></script>
 </body>
 </html>
