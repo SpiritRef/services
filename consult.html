@@ -23,10 +23,31 @@
   #modal.open { display: flex; }
   #modalBox { background: #fffdf8; border: 1px solid #dcbfa2; border-radius: 12px; padding: 24px; width: 90%; max-width: 360px; text-align: center; }
   #status { margin-top: 12px; font-weight: bold; font-size: 14px; white-space: pre-line; text-align: center; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .back-home { color: #8b7355; text-decoration: none; font-weight: bold; font-size: 14px; }
+  .expandable-menu-container { position: fixed; right: 16px; bottom: 16px; z-index: 9999; }
+  .floating-service-btn { width: 52px; height: 52px; border-radius: 50%; background: #1c1e21; color: #ffc107; border: 1px solid #ffc107; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  .menu-content { display: none; position: absolute; right: 0; bottom: 60px; background: rgba(28,30,33,0.97); border: 1px solid #ffc107; border-radius: 10px; padding: 8px; min-width: 160px; }
+  .expandable-menu-container.show-menu .menu-content { display: block; }
+  .menu-item { display: flex; gap: 8px; align-items: center; color: #ffc107; text-decoration: none; padding: 8px 10px; font-size: 14px; white-space: nowrap; }
+
 </style>
 </head>
 <body>
+<div class="expandable-menu-container" id="menuContainer">
+  <div class="menu-content" id="menuContent"></div>
+  <button class="floating-service-btn" id="serviceBtn" onclick="toggleMenu()" aria-label="選單">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+</div>
 <div class="card">
+  <div class="topbar">
+    <a href="./index.html" class="back-home">← 返回首頁</a>
+  </div>
   <h2>📿 諮詢表單</h2>
   <label>姓名 / 稱呼 *</label>
   <input id="f_name" placeholder="怎麼稱呼您">
@@ -66,7 +87,7 @@
 </div></div>
 
 <script type="module">
-import { getIni } from '/Javascript/global.js';
+import { getIni, initMenu } from '/Javascript/global.js';
 
 // 設定全部來自 global.ini（CONSULT_API_URL、RECAPTCHA_SITE_KEY）
 let GAS_URL = '';
@@ -77,6 +98,7 @@ async function initConfig() {
   say('載入設定中...', 'blue');
   try {
     const cfg = await getIni('/settings/global.ini');
+    if (cfg.MENU_DATA) initMenu(cfg.MENU_DATA);
     const raw = (cfg.CONSULT_API_URL || '').trim();
     GAS_URL = raw.startsWith('http') ? raw : (raw ? atob(raw) : '');
     RECAPTCHA_SITE = (cfg.RECAPTCHA_SITE_KEY || '').trim();
