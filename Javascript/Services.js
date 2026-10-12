@@ -99,9 +99,12 @@ async function loadStaticData(path, type) {
         if (type === 'notice') {
             const rawData = Array.isArray(data) ? data : (data.notices || []);
             allNotices = rawData.filter(item => String(item["標題"] || "").includes("公告"));
+            try { localStorage.setItem('cache_notices', JSON.stringify(allNotices)); } catch (e) {}
             renderNotices();
         } else if (type === 'service'){
             const rawData = Array.isArray(data) ? data : (data.services || []);
+            // 存完整檔（過濾是渲染時的事，快取存過濾版會污染下次載入）
+            try { localStorage.setItem('cache_services', JSON.stringify(rawData)); } catch (e) {}
             processServiceData(rawData); // 觸發並行處理
         }
     } catch (e) {
@@ -127,8 +130,7 @@ async function refreshFromVersion() {
     if (JsonServicePath) tasks.push(loadStaticData(JsonServicePath, 'service'));
     await Promise.all(tasks);
     try {
-        localStorage.setItem('cache_notices', JSON.stringify(allNotices));
-        localStorage.setItem('cache_services', JSON.stringify(allServices));
+        // 檔案快取由 loadStaticData 寫入（服務存完整檔），這裡只記版本
         localStorage.setItem('data_ver', remoteVer);
         console.log("✅ 已更新到最新版本");
     } catch (e) {

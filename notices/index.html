@@ -29,11 +29,7 @@
 	<link rel="stylesheet" href="../CSS/cloud.css?v=20261011">
 	<style>
 		body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: #f8f9fa; padding: 20px; color: #333; line-height: 1.6; }
-		.list-container { max-width: 850px; margin: auto; background: rgba(102, 95, 85, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; color: #f3ede4; }
-		.list-container h1 { color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.25); }
-		.list-container .controls { color: #e8e0d2; border-bottom-color: rgba(255, 255, 255, 0.2); }
-		.list-container .pagination { color: #e8e0d2; border-top-color: rgba(255, 255, 255, 0.2); }
-		.list-container a:not(.page-btn):not(.btn) { color: #ffd98a; }
+		.list-container { max-width: 850px; margin: auto; background: rgba(216, 213, 208, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #eaeaea; color: #333333; }
 		h1 { text-align: center; color: #1a1a1a; font-size: 2.2em; font-weight: 900; margin-top: 0; letter-spacing: 2px; border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; }
 		
 		.controls { 
@@ -55,7 +51,8 @@
 		.item:last-child { margin-bottom: 0; }
 		.date { color: #4a2e1b; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; }
 		
-		.pagination { margin-top: 40px; padding-top: 20px; border-top: 1px solid #f0f0f0; display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; color: #555555; font-weight: bold; }
+		.pagination { margin-top: 40px; padding-top: 20px; border-top: 1px solid #f0f0f0; display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; row-gap: 10px; color: #555555; font-weight: bold; }
+		.pagination .jump-group { white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
 		.page-btn { padding: 8px 20px; background: #ffffff; color: #333333; border: 1px solid #cccccc; border-radius: 6px; cursor: pointer; font-family: inherit; font-weight: bold; transition: all 0.3s; }
 		.page-btn:disabled { background: #f9f9f9; color: #aaaaaa; border-color: #eeeeee; cursor: not-allowed; }
 		.page-btn:hover:not(:disabled) { background: #faf6f0; border-color: #8b7355; color: #8b7355; }
@@ -68,6 +65,8 @@
 			h1 { font-size: 1.8em; }
 			.controls { flex-direction: column; align-items: flex-start; }
 			.pagination { gap: 8px; }
+			.page-btn { padding: 6px 12px; font-size: 0.85rem; }
+			.jump-select { padding: 4px 8px; font-size: 0.85rem; }
 		}
 	</style>
 </head>
@@ -108,7 +107,7 @@
 	<div class="pagination">
 		<button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
 		
-		<span>跳至第 
+		<span class="jump-group">跳至第 
 			<select id="pageJump" class="jump-select" onchange="jumpToPage()">
 				<option value="1">1</option>
 			</select> 頁
