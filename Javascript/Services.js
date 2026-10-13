@@ -82,7 +82,7 @@ function processServiceData(data) {
     // 💡 任務 3：處理視覺紀錄 (分類：視覺紀錄)
     Promise.resolve().then(() => {
         allVisualRecords = data.filter(item => String(item["分類"] || "") === "視覺紀錄");
-        renderVisualRecords(allVisualRecords.slice(0, 6), allVisualRecords.length); // 新增的渲染函數
+        renderVisualRecords(allVisualRecords.slice(0, 6), allVisualRecords.length); // 首頁顯示 6 個，多的去 YouTube 頻道看
     });
 }
 
@@ -246,19 +246,30 @@ function renderVisualRecords(displayData, totalCount) {
         return;
     }
 
-    // 渲染卡片內容
+    // 渲染卡片內容（支援多個影片連結，疊放多個播放器）
     container.innerHTML = displayData.map(item => {
-        const videoUrl = item["連結"] || item["貼文連結"] || "";
-        const embedUrl = getYouTubeEmbedUrl(videoUrl);
+        const videoRaw = item["連結"] || item["貼文連結"] || "";
+        let urlArray = [];
+        if (Array.isArray(videoRaw)) {
+            urlArray = videoRaw;
+        } else if (typeof videoRaw === "string" && videoRaw.trim() !== "") {
+            urlArray = videoRaw.split(/[,\n\s]+/).filter(url => url.trim() !== "");
+        }
+        const embeds = urlArray.map(getYouTubeEmbedUrl).filter(u => u);
         const title = item["標題"] || "影片紀錄";
         const desc = item["貼文內容"] || "";
 
         return `
             <div class="card">
-                ${embedUrl ? `
-                    <div class="video-container" style="margin-bottom:15px; border-radius:8px; overflow:hidden;">
-                        <iframe width="100%" height="200" src="${embedUrl}" 
-                            frameborder="0" allowfullscreen></iframe>
+                ${embeds.length ? `
+                    <div class="video-container" style="margin-bottom:10px; border-radius:8px; overflow:hidden;">
+                        <iframe width="100%" height="200" src="${embeds[0]}" 
+                            frameborder="0" allowfullscreen loading="lazy"></iframe>
+                    </div>
+                ` : ''}
+                ${embeds.length > 1 ? `
+                    <div class="vid-tabs">
+                        ${embeds.map((u, i) => `<button class="vid-tab${i === 0 ? ' active' : ''}" onclick="switchVisualVideo(this,'${u}')">影片${i + 1}</button>`).join('')}
                     </div>
                 ` : ''}
                 <h3>${title}</h3>
@@ -273,8 +284,17 @@ function renderVisualRecords(displayData, totalCount) {
         btn.style.display = 'inline-block';
     }
 }
-function getYouTubeEmbedUrl(url) {
-    if (!url) return null;
+// 視覺紀錄分頁切換：同卡只播一支，按鈕換片
+window.switchVisualVideo = function(btn, url) {
+    const card = btn.closest('.card');
+    const frame = card ? card.querySelector('iframe') : null;
+    if (frame) frame.src = url;
+    const tabs = card ? card.querySelectorAll('.vid-tab') : [];
+    tabs.forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+};
+
+function getYouTubeEmbedUrl(url) {    if (!url) return null;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     const videoId = (match && match[2].length === 11) ? match[2] : null;

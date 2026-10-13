@@ -82,9 +82,11 @@
             body { padding: 10px; }
             .list-container { padding: 15px; }
             .faq-a { padding-left: 15px; }
-            .pagination { gap: 8px; }
-            .page-btn { padding: 6px 12px; font-size: 0.85rem; }
-            .jump-select { padding: 4px 8px; font-size: 0.85rem; }
+            .pagination { gap: 6px; }
+            .page-btn { padding: 6px 10px; font-size: 0.85rem; }
+            .jump-select { padding: 4px 6px; font-size: 0.85rem; max-width: 64px; }
+            .jump-label { display: none; }
+            #pageInfo { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -125,9 +127,9 @@
 	<div class="pagination">
 	    <button id="prevBtn" class="page-btn" onclick="prevPage()">上一頁</button>
 	    
-	    <span class="jump-group">跳至第 
+	    <span class="jump-group"><span class="jump-label">跳至第</span> 
 	        <select id="pageJump" class="jump-select" onchange="jumpToPage()">
-	            </select> 頁
+	            </select><span class="jump-label">頁</span>
 	    </span>
 	
 	    <span id="pageInfo">第 1 頁</span>

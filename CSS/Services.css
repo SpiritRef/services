@@ -126,6 +126,12 @@ nav a:hover { color: var(--accent-color); }
     border: 0;
 }
 
+/* 視覺紀錄影片分頁 */
+.vid-tabs { display: flex; gap: 8px; margin: 0 0 12px; flex-wrap: wrap; }
+.vid-tab { padding: 4px 14px; border-radius: 20px; border: 1px solid #dcbfa2; background: #ffffff; color: #8b7355; cursor: pointer; font-family: inherit; font-size: 0.85rem; transition: all 0.2s; }
+.vid-tab:hover { border-color: #8b7355; }
+.vid-tab.active { background: #8b7355; color: #ffffff; }
+
 /* 入口按鈕 */
 .btn { display: inline-block; background: var(--primary-color); color: #fff; padding: 12px 35px; text-decoration: none; border-radius: 30px; margin-top: 20px; transition: 0.3s; }
 .btn:hover { background: var(--accent-color); }
