@@ -92,7 +92,13 @@ nav a:hover { color: var(--accent-color); }
 	word-break: keep-all;
     overflow-wrap: break-word;
 }
-/* 服務項目卡片 */
+/* 超自然現象彙典 (FAQ) 專屬卡片間距調整 */
+#faq-content .card {
+    margin-bottom: 25px; /* 加大卡片間距 */
+}
+#faq-content .card:last-child {
+    margin-bottom: 0;
+}
 .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
 /* 專業服務項目：四個以下一列兩個，五個以上一列三個（由 JS 依筆數掛 data-cols） */
 #services-container[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }

@@ -230,7 +230,7 @@ function renderFAQ() {
             : "";
         
         return `
-            <div class="card" style="margin-bottom: 15px;">
+            <div class="card" style="margin-bottom: 20px;">
                 <h3>第${cnNum(qNumber)}章 ${q}</h3>
                 <p>${a}</p>
                 ${linksHtml}
