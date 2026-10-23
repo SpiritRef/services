@@ -88,7 +88,24 @@
   }
   .back-home:hover { transform: scale(1.05); background: #000000; color: #ffc107; }
 
+  /* ===== 送出成功後的 LINE 推廣區塊 ===== */
+  .line-promo { margin-top: 18px; border: 1px solid #dcbfa2; border-radius: 10px; background: #fffdf8; padding: 16px; text-align: center; }
+  .line-promo[hidden] { display: none; }
+  .lp-title { font-weight: bold; color: #4a2e1b; font-size: 16px; margin-bottom: 6px; }
+  .lp-text { font-size: 13px; color: #5c4332; margin: 0 0 12px; line-height: 1.6; }
+  .lp-btn { display: block; padding: 11px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 15px; margin-bottom: 8px; background: #06c755; color: #fff; }
+  .lp-btn-gold { background: #8b7355; }
+  .lp-btn:active { opacity: .85; }
+  .lp-note { font-size: 12px; color: #8b7355; margin: 2px 0 12px; line-height: 1.5; }
+  .lp-qrwrap { margin-top: 6px; }
+  .lp-qr { display: inline-block; padding: 8px; background: #fff; border: 1px solid #eee; border-radius: 6px; }
+  .lp-qr[hidden] { display: none; }
+  .lp-qr img, .lp-qr canvas { width: 160px; height: 160px; display: block; }
+  .lp-qrnote { font-size: 12px; color: #999; margin-top: 6px; }
+  .lp-warn { margin-top: 8px; font-size: 12px; color: #b04a3a; font-weight: bold; }
+
 </style>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div class="expandable-menu-container" id="menuContainer">
@@ -136,6 +153,20 @@
   </label>
   <button id="sendBtn" onclick="onSubmit()">送出</button>
   <div id="status"></div>
+
+  <div id="linePromo" class="line-promo" hidden>
+    <div class="lp-title">📱 加入官方 LINE，隨時查案件進度</div>
+    <p class="lp-text">綁定後在 LINE 輸入「<b>我的案件</b>」就能查詢處理進度。</p>
+    <a class="lp-btn" href="https://lin.ee/Rw7jBiH" target="_blank" rel="noopener">① 加入官方 LINE 好友</a>
+    <a class="lp-btn lp-btn-gold" id="bindBtn" href="#" target="_blank" rel="noopener">② 一鍵綁定此案件</a>
+    <p class="lp-note">② 請先完成①。<br>點擊後會開啟 LINE，綁定訊息已幫您打好，按送出即完成。</p>
+    <div class="lp-qrwrap">
+      <div id="bindQr" class="lp-qr"></div>
+      <div id="qrFallback" class="lp-qr" hidden><img src="/pic/Line@.jpg" alt="LINE QR Code"></div>
+      <div class="lp-qrnote" id="qrNote">手機掃描 QR → 自動帶入綁定訊息</div>
+      <div class="lp-warn">⚠️ 此 QR 含您的案件資訊，請勿分享給他人</div>
+    </div>
+  </div>
 </div>
 
 <div id="modal"><div id="modalBox">
@@ -219,6 +250,40 @@ async function onOtpConfirm() {
 
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
+// ===== LINE 推廣／一鍵綁定 =====
+// 官方帳號 Basic ID（由 https://lin.ee/Rw7jBiH 轉址取得）
+const LINE_BASIC_ID = '@625srjek';
+
+// LINE 無法代客送出訊息，但可以用 oaMessage 深連結「先打好字」，
+// 使用者開啟後按一次送出即完成綁定。
+function bindDeepLink(caseId, name) {
+  const text = '綁定 ' + caseId + ' ' + (name || '');
+  return 'https://line.me/R/oaMessage/' + LINE_BASIC_ID + '/?' + encodeURIComponent(text.trim());
+}
+
+function showLinePromo(caseId, name) {
+  const box = document.getElementById('linePromo');
+  if (!box || !caseId) return;
+  const url = bindDeepLink(caseId, name);
+  const btn = document.getElementById('bindBtn');
+  btn.href = url;
+
+  const qrBox = document.getElementById('bindQr');
+  const fb = document.getElementById('qrFallback');
+  const note = document.getElementById('qrNote');
+  qrBox.innerHTML = '';
+  if (typeof QRCode !== 'undefined') {
+    new QRCode(qrBox, { text: url, width: 160, height: 160, correctLevel: QRCode.CorrectLevel.M });
+    fb.hidden = true;
+    if (note) note.textContent = '手機掃描 QR → 自動帶入綁定訊息';
+  } else {
+    fb.hidden = false;
+    if (note) note.textContent = '掃描加入好友後，回傳：綁定 ' + caseId + ' ' + (name || '');
+  }
+  box.hidden = false;
+  try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+}
+
 async function doSubmit(extra) {
   say('送出中...', 'blue');
   try {
@@ -231,6 +296,7 @@ async function doSubmit(extra) {
     if (r.success) {
       say('✅ 已收到！案件編號：' + r.caseId + '\n我們會盡快與您聯繫。', 'green');
       document.getElementById('sendBtn').disabled = true;
+      showLinePromo(r.caseId, val('f_name'));
     } else {
       say('送出失敗：' + r.message, 'red');
     }
@@ -251,6 +317,7 @@ async function callApi(action, data) {
 window.onSubmit = onSubmit;
 window.onOtpConfirm = onOtpConfirm;
 window.closeModal = closeModal;
+window.showLinePromo = showLinePromo; // 供測試／除錯用
 
 // 第一次填上 email 自動勾一次；手動動過之後不再干涉，全部自己決定
 let copyTouched = false;
