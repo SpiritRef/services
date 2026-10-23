@@ -100,7 +100,7 @@ nav a:hover { color: var(--accent-color); }
     margin-bottom: 0;
 }
 .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px; }
-/* 專業服務項目：四個以下一列兩個，五個以上一列三個（由 JS 依筆數掛 data-cols） */
+/* 專業服務：四個以下一列兩個，五個以上一列三個（由 JS 依筆數掛 data-cols） */
 #services-container[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
 #services-container[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 700px) {

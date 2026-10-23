@@ -65,11 +65,11 @@ function loadCache() {
  * 核心邏輯：異步處理服務資料，達成「服務」與「FAQ」競爭渲染
  */
 function processServiceData(data) {
-    // 💡 任務 1：處理服務項目 (包含：服務項目)
+    // 💡 任務 1：處理專業服務 (包含：專業服務)
     Promise.resolve().then(() => {
-        allServices = data.filter(item => String(item["分類"] || "") === "服務項目");
+        allServices = data.filter(item => String(item["分類"] || "") === "專業服務");
         renderServices(allServices);
-        console.log("🛠️ 服務項目已渲染");
+        console.log("🛠️ 專業服務已渲染");
     });
 
     // 💡 任務 2：處理 FAQ (分類：超自然現象彙典)
@@ -240,7 +240,7 @@ function renderFAQ() {
 }
 
 /**
- * 渲染服務項目卡片
+ * 渲染專業服務卡片
  */
 function renderServices(data) {
     const container = document.getElementById('services-container');
@@ -248,7 +248,7 @@ function renderServices(data) {
     // 四個以下一列兩個，五個以上一列三個
     container.dataset.cols = data.length >= 5 ? '3' : '2';
     if (data.length === 0) {
-        container.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">服務項目整理中。</p>';
+        container.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">專業服務整理中。</p>';
         return;
     }
     container.innerHTML = data.map((item, index) => `
