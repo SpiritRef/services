@@ -184,6 +184,7 @@ function cnNum(n) {
     if (r < 20) return s + '一' + cnNum(r);
     return s + cnNum(r);
 }
+
 function renderFAQ() {
     const content = document.getElementById('faq-content');
     if (!content) return;
@@ -191,23 +192,37 @@ function renderFAQ() {
         content.innerText = "目前暫無新增超自然現象。";
         return;
     }
-    const displayList = allFAQs.slice(0, 5);
+
+    const pageSize = 5; // 每頁/每次推播 5 篇
+    const totalCount = allFAQs.length;
+    const maxPage = Math.ceil(totalCount / pageSize) || 1;
+
+    // 💡 核心輪播邏輯：根據今天是幾號 (1~31) 計算要顯示第幾頁
+    const todayDate = new Date().getDate(); 
+    // 取餘數循環：如果文章總頁數只有 3 頁，而今天是 4 號，就會循環回到第 1 頁 (4-1)%3 + 1 = 1
+    const targetPage = ((todayDate - 1) % maxPage) + 1;
+
+    const start = (targetPage - 1) * pageSize;
+    const end = start + pageSize;
+    const displayList = allFAQs.slice(start, end);
+
     content.innerHTML = displayList.map((item, index) => {
         const q = item["標題"] || "超自然現象彙典";
         const a = item["貼文內容"] || item["內容"] || "暫無解答";
         const posturl = item["連結"] || item["貼文連結"] || "";
-        const qNumber = index + 1;
+        
+        // 💡 保持正確順序的編號：如果是第 2 頁，編號從第 6 章開始（start + index + 1）
+        const qNumber = start + index + 1;
         
         // 處理多個連結：支援陣列，或是以逗號、換行、空格分隔的字串
         let urlArray = [];
         if (Array.isArray(posturl)) {
             urlArray = posturl;
         } else if (typeof posturl === "string" && posturl.trim() !== "") {
-            // 利用正規表達式分割字串，並過濾掉空值
             urlArray = posturl.split(/[,\n\s]+/).filter(url => url.trim() !== "");
         }
         
-        // 將連結陣列轉換為 HTML `<a>` 標籤，並以 <br> 換行
+        // 將連結陣列轉換為 HTML `<a>` 標籤
         const linksHtml = urlArray.length > 0 
             ? `<div class="faq-links"><span>相關文章：</span>
                  ${urlArray.map((url, i) => `<a href="${url}" target="_blank" rel="noopener noreferrer">篇章蟲洞</a>`).join('\t')}
@@ -215,7 +230,7 @@ function renderFAQ() {
             : "";
         
         return `
-            <div class="card">
+            <div class="card" style="margin-bottom: 15px;">
                 <h3>第${cnNum(qNumber)}章 ${q}</h3>
                 <p>${a}</p>
                 ${linksHtml}
@@ -223,10 +238,6 @@ function renderFAQ() {
         `;
     }).join('');
 }
-            // <div class="notice-item" style="display: block; margin-bottom: 15px;">
-            //     <div class="notice-text" style="font-weight: bold; color: #d4af37;">Q${qNumber}: ${q}</div>
-            //     <div class="notice-text" style="margin-left: 20px; font-size: 0.95em; opacity: 0.9;">A: ${a}</div>
-            // </div>
 
 /**
  * 渲染服務項目卡片
