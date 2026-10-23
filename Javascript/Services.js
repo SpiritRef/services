@@ -169,6 +169,21 @@ function renderNotices() {
 /**
  * 渲染常見問題列表
  */
+// 阿拉伯數字轉國字（1→一、10→十、11→十一、21→二十一、101→一百零一）
+function cnNum(n) {
+    const d = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+    n = Number(n);
+    if (!n || n < 0) return '';
+    if (n < 10) return d[n];
+    if (n < 20) return '十' + (n % 10 ? d[n % 10] : '');
+    if (n < 100) return d[Math.floor(n / 10)] + '十' + (n % 10 ? d[n % 10] : '');
+    const h = Math.floor(n / 100), r = n % 100;
+    let s = d[h] + '百';
+    if (!r) return s;
+    if (r < 10) return s + '零' + d[r];
+    if (r < 20) return s + '一' + cnNum(r);
+    return s + cnNum(r);
+}
 function renderFAQ() {
     const content = document.getElementById('faq-content');
     if (!content) return;
@@ -201,8 +216,8 @@ function renderFAQ() {
         
         return `
             <div class="card">
-                <h3>Q${qNumber}: ${q}</h3>
-                <p>A: ${a}</p>
+                <h3>第${cnNum(qNumber)}章 ${q}</h3>
+                <p>${a}</p>
                 ${linksHtml}
             </div>
         `;
